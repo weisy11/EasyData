@@ -1,2 +1,2 @@
 # EasyData
-EasyData is an opensource toolbox for data quality assesment, data quality modify, and offline data augment.
+EasyData is an toolset for data quality assesment, data quality modify, and offline data augment.
