@@ -1,0 +1,4 @@
+0 0 degrees counterclockwise
+1 90 degrees counterclockwise
+2 180 degrees
+3 90 degrees clockwise
