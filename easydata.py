@@ -16,21 +16,20 @@ import os
 import sys
 
 parent = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.abspath(os.path.join(parent, '../deploy/')))
+sys.path.insert(0, os.path.abspath(os.path.join(parent, './deploy/')))
+
+import argparse
 
 from pmp.engine.pipeline import Pipeline
-from pmp.utils.logger import setup_logger
-from pmp.core.config import ArgsParser
 
 
 def argsparser():
-    parser = ArgsParser()
 
-    parser.add_argument("--config",
-                        type=str,
-                        default=None,
-                        help=("Path of configure"),
-                        required=True)
+    def str2bool(v):
+        return v.lower() in ("true", "t", "1")
+
+    parser = argparse.ArgumentParser()
+
     parser.add_argument(
         "--input",
         type=str,
@@ -40,33 +39,60 @@ def argsparser():
         required=True)
     parser.add_argument("--output_dir",
                         type=str,
-                        default="output",
+                        default=None,
                         help="Directory of output visualization files.")
     parser.add_argument(
         "--run_mode",
         type=str,
-        default='paddle',
+        default=None,
         help="mode of running(paddle/trt_fp32/trt_fp16/trt_int8)")
     parser.add_argument(
         "--device",
         type=str,
-        default='cpu',
+        default=None,
         help=
         "Choose the device you want to run, it can be: CPU/GPU/XPU, default is CPU."
     )
-    return parser
+
+    args = parser.parse_args()
+    return vars(args)
 
 
-if __name__ == '__main__':
-    parser = argsparser()
-    FLAGS = parser.parse_args()
-    print("============================================================")
-    print(FLAGS)
-    print("============================================================")
+def init_config(**cfg):
+    base_cfg_path = "./deploy/configs/image_orientation.yml"
+    __dir__ = os.path.dirname(__file__)
+    base_cfg_path = os.path.join(__dir__, base_cfg_path)
 
-    print(vars(FLAGS))
-    print("============================================================")
-    exit()
-    input = os.path.abspath(FLAGS.input)
-    pipeline = Pipeline(input, FLAGS)
-    pipeline.run()
+    env_config = {}
+    if "output_dir" in cfg and cfg["output_dir"]:
+        env_config["output_dir"] = cfg["output_dir"]
+    if "run_mode" in cfg and cfg["run_mode"]:
+        env_config["run_mode"] = cfg["run_mode"]
+    if "device" in cfg and cfg["device"]:
+        env_config["device"] = cfg["device"]
+    opt_config = env_config
+
+    FLAGS = argparse.Namespace(**{"config": base_cfg_path, "opt": opt_config})
+    input = os.path.abspath(cfg["input"])
+    return input, FLAGS
+
+
+class EasyData(object):
+
+    def __init__(self, **cfg):
+        input, FLAGS = init_config(**cfg)
+        self.pipeline = Pipeline(input, FLAGS)
+
+    def predict(self):
+        return self.pipeline.run()
+
+
+# for CLI
+def main():
+    cfg = argsparser()
+    easydata = EasyData(**cfg)
+    easydata.predict()
+
+
+if __name__ == "__main__":
+    main()

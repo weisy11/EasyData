@@ -1,4 +1,5 @@
 ENV:
+  output_dir: output
   run_mode: paddle
   device: GPU
   min_subgraph_size: 3
@@ -11,8 +12,8 @@ ENV:
 MODEL:
   - ClassificationOp:
       name: cls
-      param_path:
-      model_path:
+      param_path: http://10.181.196.20:8000/downloads/image_orientation_infer/inference.pdiparams
+      model_path: http://10.181.196.20:8000/downloads/image_orientation_infer/inference.pdmodel
       batch_size: 8
       last_ops:
         - input
@@ -33,7 +34,7 @@ MODEL:
       PostProcess:
         - Topk:
             topk: 5
-            class_id_map_file:
+            class_id_map_file: utils/image_orientation_label_list.txt
       Inputs:
         - image
   - ClasVisualizer:

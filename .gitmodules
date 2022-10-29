@@ -1,3 +1,0 @@
-[submodule "deploy/PaddleModelPipeline"]
-	path = deploy/PaddleModelPipeline
-	url = https://github.com/jerrywgz/PaddleModelPipeline.git
