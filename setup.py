@@ -15,14 +15,15 @@
 from io import open
 from setuptools import setup
 
-with open('requirements.txt', encoding="utf-8-sig") as f:
-    requirements = f.readlines()
+def get_requirements():
+    with open('requirements.txt', encoding="utf-8-sig") as f:
+        requirements = f.readlines()
+    return requirements
 
-
-def readme():
+def get_readme():
     with open('./README.md', encoding="utf-8-sig") as f:
-        README = f.read()
-    return README
+        readme = f.read()
+    return readme
 
 
 setup(
@@ -32,13 +33,14 @@ setup(
     include_package_data=True,
     entry_points={"console_scripts": ["easydata=easydata.easydata:main"]},
     version='0.0.0',
-    install_requires=requirements,
+    install_requires=get_requirements(),
     license='Apache License 2.0',
     description='A tool for improving data quality powered by PaddlePaddle.',
-    long_description=readme(),
+    long_description=get_readme(),
     long_description_content_type='text/markdown',
     url='https://github.com/PaddlePaddle/EasyData',
     download_url='https://github.com/PaddlePaddle/EasyData.git',
+    # TODO(gaotingquan)
     keywords=[
         'PP-OCR',
         'PP-ShiTu',
