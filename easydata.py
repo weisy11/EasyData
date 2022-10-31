@@ -30,6 +30,7 @@ def argsparser():
 
     parser = argparse.ArgumentParser()
 
+    parser.add_argument("--model", type=str, required=True, help="Model name.")
     parser.add_argument(
         "--input",
         type=str,
@@ -59,7 +60,8 @@ def argsparser():
 
 
 def init_config(**cfg):
-    base_cfg_path = "./deploy/configs/image_orientation.yml"
+    model_name = cfg["model"]
+    base_cfg_path = f"./deploy/configs/{model_name}.yml"
     __dir__ = os.path.dirname(__file__)
     base_cfg_path = os.path.join(__dir__, base_cfg_path)
 

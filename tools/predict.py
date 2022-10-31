@@ -60,13 +60,6 @@ def argsparser():
 if __name__ == '__main__':
     parser = argsparser()
     FLAGS = parser.parse_args()
-    print("============================================================")
-    print(FLAGS)
-    print("============================================================")
-
-    print(vars(FLAGS))
-    print("============================================================")
-    exit()
     input = os.path.abspath(FLAGS.input)
     pipeline = Pipeline(input, FLAGS)
     pipeline.run()
