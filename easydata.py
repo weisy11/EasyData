@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(parent, './deploy/')))
 
 import argparse
 
-from pmp.engine.pipeline import Pipeline
+from ppcv.engine.pipeline import Pipeline
 
 
 def argsparser():
@@ -75,25 +75,25 @@ def init_config(**cfg):
     opt_config = env_config
 
     FLAGS = argparse.Namespace(**{"config": base_cfg_path, "opt": opt_config})
-    input = os.path.abspath(cfg["input"])
-    return input, FLAGS
+    
+    return FLAGS
 
 
 class EasyData(object):
-
     def __init__(self, **cfg):
-        input, FLAGS = init_config(**cfg)
-        self.pipeline = Pipeline(input, FLAGS)
+        FLAGS = init_config(**cfg)
+        self.pipeline = Pipeline(FLAGS)
 
-    def predict(self):
-        return self.pipeline.run()
+    def predict(self, input):
+        return self.pipeline.run(input)
 
 
 # for CLI
 def main():
     cfg = argsparser()
     easydata = EasyData(**cfg)
-    easydata.predict()
+    input = os.path.abspath(cfg["input"])
+    easydata.predict(input)
 
 
 if __name__ == "__main__":

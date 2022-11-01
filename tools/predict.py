@@ -18,9 +18,9 @@ import sys
 parent = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.abspath(os.path.join(parent, '../deploy/')))
 
-from pmp.engine.pipeline import Pipeline
-from pmp.utils.logger import setup_logger
-from pmp.core.config import ArgsParser
+from ppcv.engine.pipeline import Pipeline
+from ppcv.utils.logger import setup_logger
+from ppcv.core.config import ArgsParser
 
 
 def argsparser():
@@ -61,5 +61,5 @@ if __name__ == '__main__':
     parser = argsparser()
     FLAGS = parser.parse_args()
     input = os.path.abspath(FLAGS.input)
-    pipeline = Pipeline(input, FLAGS)
-    pipeline.run()
+    pipeline = Pipeline(FLAGS)
+    pipeline.run(input)
