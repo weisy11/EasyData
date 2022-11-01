@@ -50,7 +50,7 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
 
 ## 📖 文档教程
 
-- 运行环境准备 @廷权
+- 运行环境准备 @晓婷
 - Light-weight Data Improve 数据质量提升方案 @崔程
   - 快速体验
   - 数据质量提升工具集
@@ -64,5 +64,9 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
 - 数据标注工具大全@赵军
 
 - 开源社区@赵军
-- 许可证书@廷权
+- 许可证书
 
+
+
+## 许可证书
+本项目的发布受<a href="https://github.com/PaddlePaddle/PaddleOCR/blob/master/LICENSE">Apache 2.0 license</a>许可认证。
