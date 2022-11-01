@@ -16,15 +16,18 @@ import os
 import numpy as np
 
 
-class Identity(object):
-    def __init__(self):
+class NormalizeFeature(object):
+    def __init__(self, normalize=True):
         super().__init__()
+        self.normalize = normalize
 
     def __call__(self, x, output_keys):
+        if self.normalize:
+            feas_norm = np.sqrt(np.sum(np.square(x), axis=1, keepdims=True))
+            x = np.divide(x, feas_norm)
+
         y = []
         for idx, feature in enumerate(x):
-            result = {
-                output_keys[0]: feature,
-            }
+            result = {output_keys[0]: feature}
             y.append(result)
         return y
