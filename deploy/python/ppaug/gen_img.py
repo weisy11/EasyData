@@ -119,9 +119,6 @@ class GenAug(object):
 
         for line in tqdm(gen_img_list, desc='in aug {} '.format(self.ops)):
             self.all_num += 1
-            # print(str(self.delimiter))
-            # import pdb
-            # pdb.set_trace()
             try:
                 file_name, label = line.split(self.delimiter)
                 label = label.strip("\n")
