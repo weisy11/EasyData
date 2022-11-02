@@ -21,7 +21,7 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
 - **💥 直播预告**，todo@赵军 
 
 - **🔥2022.11 发布 EasyData beta/0.5**
-  - 发布数据质量提升工具，@崔程
+  - 发布数据质量提升工具，包括图像方向矫正、低质图像过滤能力，使用该工具可以在多个视觉任务中提升效果。
   - 发布数据合成工具@晓婷
   - 发布开源数据集和标注工具大全@赵军
 
@@ -29,7 +29,7 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
 
 ## ⚡ 快速开始
 
-- 数据质量提升快速体验 @崔程
+- [数据质量提升快速体验](docs/zh_CN/LDI/quick_start.md)
 - 数据合成工具快速体验@晓婷
 - 开源数据集和标注工具大全@赵军
 
@@ -39,24 +39,33 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
 
 ## 🛠️ EasyData模型列表（更新中）
 
+
+数据质量提升：
+
+| 类别 | 亮点 | 文档说明 | 模型下载 |
+| :--: | :--: | :------: | :------: |
+|图像方向矫正|自动矫正图像，大大提升多项视觉任务在旋转图像上精度|[文档](docs/zh_CN/LDI/image_orientation_correction.md)|[下载链接](@tingquan)|
+|模糊图像过滤|判断图像是否模糊，可以广泛应用于模糊图像过滤、视觉相关业务的前处理等|[文档](docs/zh_CN/LDI/low_quality_image_filtering.md)|[下载链接](@tingquan)|
+|广告码图像过滤|判断图像是否含有二维码、条形码、小程序码，可以广泛应用于广告码过滤、审核等业务|[文档](docs/zh_CN/LDI/low_quality_image_filtering.md)|[下载链接](@tingquan)|
+
+数据扩充：
+
 | 类别 | 亮点 | 文档说明 | 模型下载 |
 | :--: | :--: | :------: | :------: |
 |      |      |          |          |
 |      |      |          |          |
-|      |      |          |          |
-|      |      |          |          |
+
 
 
 
 ## 📖 文档教程
 
 - 运行环境准备 @晓婷
-- Light-weight Data Improve 数据质量提升方案 @崔程
-  - 快速体验
+- Light-weight Data Improve 数据质量提升方案
+  - [快速体验](docs/zh_CN/LDI/quick_start.md)
   - 数据质量提升工具集
-    - 图像方向校正工具
-    - 低质图像过滤工具
-  - 模型训练
+    - [图像方向校正工具](docs/zh_CN/LDI/image_orientation_correction.md)
+    - [低质图像过滤工具](docs/zh_CN/LDI/low_quality_image_filtering.md)
 - EasyDataAugment 数据扩充方案 @晓婷
   - 快速体验
   - 流程详解
