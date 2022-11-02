@@ -19,15 +19,21 @@ from ppcv.engine.pipeline import Pipeline
 from utils.utils import load_yaml
 
 
-class PPDataImprove(Pipeline):
+class PPDataImprove(object):
     def __init__(self, args):
         self.input = os.path.abspath(args.input)
+        self.model_list = self.build_pipeline(args)
+
+    def build_pipeline(self, args):
         config = load_yaml(args.config)
         config.pop("DataImprove")
-        pipeline_config_path = list(config.values())[0]
-        FLAGS = args
-        FLAGS.config = pipeline_config_path
-        super().__init__(FLAGS)
+        model_list = []
+        for model in config.keys():
+            pipeline_config_path = config[model]
+            args.config = pipeline_config_path
+            model_list.append(Pipeline(args))
+        return model_list
 
     def run(self):
-        super().run(self.input)
+        for model in self.model_list:
+            model.run(self.input)
