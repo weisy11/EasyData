@@ -52,24 +52,25 @@ class PPAug(object):
         self.check_dir(self.compare_out)
         self.feature_thresh = self.config["FeatureExtract"]["thresh"]
 
-        self.score_thresh = self.config["BigModel"]["thresh"]
-        self.big_model_out = self.config["BigModel"]["final_label"]
-        self.model_type = self.config["BigModel"]["model_type"]
         if not os.path.exists("tmp"):
             os.makedirs("tmp")
 
     def build_big_model(self):
-        FLAGS = argparse.Namespace(
-            **{"config": self.config["BigModel"]["config"]})
-        big_model = Pipeline(FLAGS)
-        return big_model
+        if "BigModel" in self.config:
+            self.score_thresh = self.config["BigModel"]["thresh"]
+            self.big_model_out = self.config["BigModel"]["final_label"]
+            self.model_type = self.config["BigModel"]["model_type"]
+            FLAGS = argparse.Namespace(
+                **{"config": self.config["BigModel"]["config"]})
+            big_model = Pipeline(FLAGS)
+            return big_model
+        else:
+            return False
 
     def build_feature_compare(self):
-
         FLAGS = argparse.Namespace(
             **{"config": self.config["FeatureExtract"]["config"]})
         feature_extract = Pipeline(FLAGS)
-
         return feature_extract
 
     def build_search(self):
@@ -126,12 +127,15 @@ class PPAug(object):
 
     def run(self):
         # gen aug data
+        logger.info('{}Start gen aug img{}'.format('*' * 10, '*' * 10))
         with open(self.aug_file, "w") as f:
             for aug_type in self.aug_type:
                 self.config["DataGen"]["aug"] = aug_type
                 dataaug = GenAug(self.config)
                 dataaug(gen_num=self.gen_num, trans_label=f)
+
         # # build gallery
+        logger.info('{}Start compare img feature{}'.format('*' * 10, '*' * 10))
         feature_extract = self.build_feature_compare()
 
         GalleryBuilder(self.config, feature_extract)
@@ -166,6 +170,9 @@ class PPAug(object):
                                      out_file=self.compare_out,
                                      thresh=self.feature_thresh)
 
+        logger.info("Repeat img has been removed, new label file is {}".format(
+            self.compare_out))
+
         # filter low score data
         image_list, gt_labels = get_image_list_from_label_file(
             self.compare_out)
@@ -173,6 +180,13 @@ class PPAug(object):
         batch_labels = []
 
         big_model = self.build_big_model()
+        if not big_model:
+            logger.info("You didn't need big model, final label is {}".format(
+                self.compare_out))
+            return
+
+        logger.info('{}Start use big model to filer quality{}'.format(
+            '*' * 10, '*' * 10))
         cnt = 0
         with open(self.big_model_out, "w") as save_file:
             for idx, img_path in enumerate(image_list):
@@ -210,3 +224,6 @@ class PPAug(object):
                                     filename, batch_labels[number]))
                     batch_labels = []
                     batch_names = []
+        logger.info(
+            "Low quality img has been removed, new label file is {}".format(
+                self.big_model_out))
