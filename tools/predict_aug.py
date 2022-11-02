@@ -145,7 +145,6 @@ class PPAug(object):
         self.build_search()
         # feather compare
         root_path = self.config["IndexProcess"]["image_root"]
-        print('delimiter:', str(self.delimiter), '**')
         image_list, gt = get_image_list_from_label_file(self.aug_file, self.delimiter)
 
         with open("tmp/repeat.txt", "w") as write_file:
