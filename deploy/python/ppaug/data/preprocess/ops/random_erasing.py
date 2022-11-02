@@ -112,3 +112,37 @@ class RandomErasing(object):
                         img[x1:x1 + h, y1:y1 + w, 0] = pixels[:, :, 0]
                 return img
         return img
+
+
+class RandomErasingOCR(object):
+    """RandomErasing for OCR data.
+    """
+    def __init__(self, r1=8, r2=2, ratio=0.25, mode=0, prob=0.5, **kwargs):
+        self.r1 = r1
+        self.r2 = r2
+        self.ratio = ratio
+        self.mode = mode
+        self.prob = prob
+
+
+    def __call__(self, img):
+        if np.random.rand() > self.prob:
+            return img
+        _, h, w = img.shape
+        mask_h = np.random.randint(h // 8, h // 4)
+        mask_w = np.random.randint(w // self.r1, w // self.r2)
+       
+        mask = np.ones((h, w), np.float32)
+        sw = np.random.randint(0, w - mask_w)
+        sh = np.random.randint(0, h - mask_h)
+        tw = sw + mask_w
+        th = sh + mask_h
+        mask[sh:th, sw:tw] *= 0
+        
+        if self.mode == 1:
+            mask = 1 - mask
+
+        mask = np.expand_dims(mask, axis=0)
+        img = (img * mask).astype(img.dtype)
+
+        return img

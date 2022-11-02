@@ -36,14 +36,13 @@ def get_image_list(img_file):
     return imgs_lists
 
 
-def get_image_list_from_label_file(label_file_path):
+def get_image_list_from_label_file(label_file_path, delimiter=' '):
     imgs_lists = []
     gt_labels = []
     with open(label_file_path, "r") as fin:
         lines = fin.readlines()
         for line in lines:
-            image_name, label = line.strip("\n").split()
-            label = int(label)
+            image_name, label = line.strip("\n").split(delimiter)
             imgs_lists.append(image_name)
-            gt_labels.append(int(label))
+            gt_labels.append(label)
     return imgs_lists, gt_labels

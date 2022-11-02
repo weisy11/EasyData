@@ -44,6 +44,7 @@ class PPAug(object):
         self.gen_ratio = self.config["DataGen"]["gen_ratio"]
 
         self.aug_file = self.config["DataGen"]["aug_file"]
+        self.delimiter = self.config["DataGen"].get('delimiter', ' ')
         self.check_dir(self.aug_file)
         self.ori_label = self.config["DataGen"]["label_file"]
         self.aug_type = self.config["DataGen"]["ops"]
@@ -104,19 +105,21 @@ class PPAug(object):
         with open(out_file, "w", encoding="utf-8") as new_aug_file:
             with open(compare_file, "r") as f:
                 for line in f.readlines():
-                    query, gallery, score = line.strip().split("\t")
+                    query = line.strip().split("\t")[0]
+                    gallery = line.strip().split("\t")[1:-1]
+                    score = line.strip().split("\t")[-1]
                     path = query.split("/")[-1]
                     if float(score) > thresh and (gallery or
                                                   query) not in self.save_list:
                         count += 1
                         self.save_list.append(gallery)
                         self.save_list.append(query)
-                        new_aug_file.write(query + " " +
+                        new_aug_file.write(query + self.delimiter +
                                            str(self.all_label[path]) + "\n")
                     elif float(score) < thresh:
                         count += 1
                         self.save_list.append(query)
-                        new_aug_file.write(query + " " +
+                        new_aug_file.write(query + self.delimiter +
                                            str(self.all_label[path]) + "\n")
         return count
 
@@ -142,7 +145,8 @@ class PPAug(object):
         self.build_search()
         # feather compare
         root_path = self.config["IndexProcess"]["image_root"]
-        image_list, gt = get_image_list_from_label_file(self.aug_file)
+        print('delimiter:', str(self.delimiter), '**')
+        image_list, gt = get_image_list_from_label_file(self.aug_file, self.delimiter)
 
         with open("tmp/repeat.txt", "w") as write_file:
             for idx, image_file in enumerate(image_list):
@@ -165,7 +169,7 @@ class PPAug(object):
                                      str(output[0]['rec_scores'][1]) + "\n")
 
         # rm repeat
-        all_label = self.get_label(self.aug_file)
+        all_label = self.get_label(self.aug_file, self.delimiter)
         final_count = self.rm_repeat(compare_file="tmp/repeat.txt",
                                      out_file=self.compare_out,
                                      thresh=self.feature_thresh)
@@ -174,8 +178,7 @@ class PPAug(object):
             self.compare_out))
 
         # filter low score data
-        image_list, gt_labels = get_image_list_from_label_file(
-            self.compare_out)
+        image_list, gt_labels = get_image_list_from_label_file(self.compare_out, self.delimiter)
         batch_names = []
         batch_labels = []
 
@@ -214,14 +217,14 @@ class PPAug(object):
                                 "{:.2f}".format(r)
                                 for r in result_dict["scores"]))
                             if float(scores_str[1:-1]) > self.score_thresh:
-                                save_file.write("{} {}\n".format(
-                                    filename, batch_labels[number]))
+                                save_file.write("{}{}{}\n".format(
+                                    filename, self.delimiter, batch_labels[number]))
                         elif self.model_type == "ocr_rec":
                             filename = batch_names[number]
-                            scores = result_dict[1]
+                            scores = result_dict["rec_score"]
                             if scores > self.score_thresh:
-                                save_file.write("{} {}\n".format(
-                                    filename, batch_labels[number]))
+                                save_file.write("{}{}{}\n".format(
+                                    filename, self.delimiter, batch_labels[number]))
                     batch_labels = []
                     batch_names = []
         logger.info(

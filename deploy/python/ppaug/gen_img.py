@@ -9,8 +9,8 @@ from tqdm import tqdm
 from .data.preprocess import transform
 from .data.preprocess.ops.operators import DecodeImage, ResizeImage
 from .data.preprocess.ops.randaugment import RandAugment
-from .data.preprocess.ops.random_erasing import RandomErasing
-from .data.preprocess.ops.grid import GridMask
+from .data.preprocess.ops.random_erasing import RandomErasing, RandomErasingOCR
+from .data.preprocess.ops.grid import GridMask, GridMaskOCR
 from .data.imaug.text_image_aug.augment import tia_distort, tia_perspective, tia_stretch
 
 
@@ -44,29 +44,49 @@ def get_image_file_list(img_file):
 
 
 class GenAug(object):
+    """gen aug data
+    """
 
     def __init__(self, config):
         config = config["DataGen"]
         self.ops = config["aug"]
         self.size = config["size"]
+        self.model_type = config.get("model_type", 'cls')
+        self.delimiter = config.get("delimiter", ' ')
         decode_op = DecodeImage()
-        resize_op = ResizeImage(size=(self.size, self.size))
+        if type(self.size) is int:
+            resize_op = ResizeImage(size=(self.size, self.size))
+        else:
+            assert len(self.size) == 2, "size shape must be 2, but got {}".format(len(self.size))
+            resize_op = ResizeImage(size=(self.size[0], self.size[1]))
         if self.ops == "randaugment":
             aug_op = RandAugment()
         if self.ops == "random_erasing":
-            aug_op = RandomErasing(EPSILON=1.0)
+            if self.model_type == 'ocr_rec':
+                aug_op = RandomErasingOCR(prob=1.0)
+            else:
+                aug_op = RandomErasing(EPSILON=1.0)
         if self.ops == "gridmask":
-            aug_op = GridMask(d1=96,
-                              d2=self.size,
-                              rotate=1,
-                              ratio=0.6,
-                              mode=1,
-                              prob=0.8)
+            if self.model_type == 'ocr_rec':
+                aug_op = GridMaskOCR(prob=1.0)
+            else:
+                aug_op = GridMask(d1=96,
+                                d2=self.size,
+                                rotate=1,
+                                ratio=0.6,
+                                mode=1,
+                                prob=0.8)
 
         if self.ops in ["randaugment", "random_erasing", "gridmask"]:
-            self.all_op = [decode_op, resize_op, aug_op]
+            if self.model_type == 'ocr_rec':
+                self.all_op = [decode_op, aug_op]
+            else:
+                self.all_op = [decode_op, resize_op, aug_op]
         else:
-            self.all_op = [decode_op, resize_op]
+            if self.model_type == 'ocr_rec':
+                self.all_op = [decode_op]
+            else:
+                self.all_op = [decode_op, resize_op]
 
         self.gen_num = config["gen_num"]
         self.img_list = get_image_file_list(config["label_file"])
@@ -99,8 +119,11 @@ class GenAug(object):
 
         for line in tqdm(gen_img_list, desc='in aug {} '.format(self.ops)):
             self.all_num += 1
+            # print(str(self.delimiter))
+            # import pdb
+            # pdb.set_trace()
             try:
-                file_name, label = line.split(" ")
+                file_name, label = line.split(self.delimiter)
                 label = label.strip("\n")
                 with open(os.path.join(self.imgs_dir, file_name), 'rb') as f:
                     data = f.read()
@@ -115,8 +138,8 @@ class GenAug(object):
                 cv2.imwrite(
                     "{}/{}/{}_{}".format(self.out_dir, self.ops, self.all_num,
                                          img_name_pure), np.array(data))
-                trans_label.write("{}/{}_{} {}\n".format(
-                    self.ops, self.all_num, img_name_pure, label))
+                trans_label.write("{}/{}_{}{}{}\n".format(
+                    self.ops, self.all_num, img_name_pure, self.delimiter , label))
                 # print("{}/{}/{}_{} {}".format(self.out_dir, self.ops, self.all_num, img_name_pure, label))
             except Exception as E:
                 print(E)
