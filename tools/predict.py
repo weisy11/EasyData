@@ -22,6 +22,8 @@ from ppcv.engine.pipeline import Pipeline
 from ppcv.utils.logger import setup_logger
 from ppcv.core.config import ArgsParser
 
+from predict_aug import PPAug
+
 
 def argsparser():
     parser = ArgsParser()
@@ -37,7 +39,7 @@ def argsparser():
         default=None,
         help=
         "Path of input, suport image file, image directory and video file.",
-        required=True)
+        required=False)
     parser.add_argument("--output_dir",
                         type=str,
                         default="output",
@@ -54,12 +56,23 @@ def argsparser():
         help=
         "Choose the device you want to run, it can be: CPU/GPU/XPU, default is CPU."
     )
+    parser.add_argument(
+        "--run_type",
+        type=str,
+        default='ppeda',
+        help=
+        "Choose the mode you want to run, it can be: ppeda/ppldi, default is ppeda."
+    )
     return parser
 
 
 if __name__ == '__main__':
     parser = argsparser()
     FLAGS = parser.parse_args()
-    input = os.path.abspath(FLAGS.input)
-    pipeline = Pipeline(FLAGS)
-    pipeline.run(input)
+    if FLAGS.run_type == "ppldi":
+        input = os.path.abspath(FLAGS.input)
+        pipeline = Pipeline(FLAGS)
+        pipeline.run(input)
+    elif FLAGS.run_type == "ppeda":
+        ppaug = PPAug(FLAGS)
+        ppaug.run()
