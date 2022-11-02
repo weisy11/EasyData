@@ -55,10 +55,11 @@ class GenAug(object):
         self.delimiter = config.get("delimiter", ' ')
         decode_op = DecodeImage()
         if type(self.size) is int:
-            resize_op = ResizeImage(size=(self.size, self.size))
+            size = (self.size, self.size)
         else:
             assert len(self.size) == 2, "size shape must be 2, but got {}".format(len(self.size))
-            resize_op = ResizeImage(size=(self.size[0], self.size[1]))
+            size = self.size
+        resize_op = ResizeImage(size)
         if self.ops == "randaugment":
             aug_op = RandAugment()
         if self.ops == "random_erasing":
@@ -78,15 +79,11 @@ class GenAug(object):
                                 prob=0.8)
 
         if self.ops in ["randaugment", "random_erasing", "gridmask"]:
-            if self.model_type == 'ocr_rec':
-                self.all_op = [decode_op, aug_op]
-            else:
-                self.all_op = [decode_op, resize_op, aug_op]
+            self.all_op = [decode_op, resize_op, aug_op]
         else:
-            if self.model_type == 'ocr_rec':
-                self.all_op = [decode_op]
-            else:
-                self.all_op = [decode_op, resize_op]
+            self.all_op = [decode_op, resize_op]
+        if self.model_type == 'ocr_rec':
+            self.all_op.pop(1)
 
         self.gen_num = config["gen_num"]
         self.img_list = get_image_file_list(config["label_file"])
