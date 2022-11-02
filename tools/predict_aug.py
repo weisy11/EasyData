@@ -70,15 +70,14 @@ class PPAug(object):
             **{"config": self.config["FeatureExtract"]["config"]})
         feature_extract = Pipeline(FLAGS)
 
+        return feature_extract
+
+    def build_search(self):
         assert 'IndexProcess' in self.config.keys(
         ), "Index config not found ... "
         self.return_k = self.config['IndexProcess']['return_k']
 
         index_dir = self.config["IndexProcess"]["index_dir"]
-        assert os.path.exists(os.path.join(
-            index_dir, "vector.index")), "vector.index not found ..."
-        assert os.path.exists(os.path.join(
-            index_dir, "id_map.pkl")), "id_map.pkl not found ... "
 
         if self.config['IndexProcess'].get("dist_type") == "hamming":
             self.Searcher = faiss.read_index_binary(
@@ -89,7 +88,6 @@ class PPAug(object):
 
         with open(os.path.join(index_dir, "id_map.pkl"), "rb") as fd:
             self.id_map = pickle.load(fd)
-        return feature_extract
 
     def get_label(self, data_file, delimiter=" "):
         self.all_label = {}
@@ -133,10 +131,11 @@ class PPAug(object):
                 self.config["DataGen"]["aug"] = aug_type
                 dataaug = GenAug(self.config)
                 dataaug(gen_num=self.gen_num, trans_label=f)
-        # build gallery
-        self.feature_extract = self.build_feature_compare()
+        # # build gallery
+        feature_extract = self.build_feature_compare()
 
-        GalleryBuilder(self.config, self.feature_extract)
+        GalleryBuilder(self.config, feature_extract)
+        self.build_search()
         # feather compare
         root_path = self.config["IndexProcess"]["image_root"]
         image_list, gt = get_image_list_from_label_file(self.aug_file)
@@ -145,7 +144,7 @@ class PPAug(object):
             for idx, image_file in enumerate(image_list):
                 preds = {}
                 output = []
-                rec_results = self.feature_extract.run(
+                rec_results = feature_extract.run(
                     os.path.join(root_path, image_file))
                 feature = np.array([rec_results[0]["feature"]])
                 scores, docs = self.Searcher.search(feature, self.return_k)
@@ -171,6 +170,7 @@ class PPAug(object):
         image_list, gt_labels = get_image_list_from_label_file(
             self.compare_out)
         batch_names = []
+        batch_labels = []
 
         big_model = self.build_big_model()
         cnt = 0
@@ -179,6 +179,7 @@ class PPAug(object):
                 file_name = os.path.join(root_path, img_path)
                 if os.path.exists(file_name):
                     batch_names.append(file_name)
+                    batch_labels.append(gt_labels[idx])
                     cnt += 1
                 else:
                     logger.warning(
@@ -200,10 +201,12 @@ class PPAug(object):
                                 for r in result_dict["scores"]))
                             if float(scores_str[1:-1]) > self.score_thresh:
                                 save_file.write("{} {}\n".format(
-                                    filename, gt_labels[idx]))
+                                    filename, batch_labels[number]))
                         elif self.model_type == "ocr_rec":
                             filename = batch_names[number]
                             scores = result_dict[1]
                             if scores > self.score_thresh:
                                 save_file.write("{} {}\n".format(
-                                    filename, gt_labels[idx]))
+                                    filename, batch_labels[number]))
+                    batch_labels = []
+                    batch_names = []
