@@ -59,7 +59,7 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
   - 模型训练
 - EasyDataAugment 数据扩充方案 @晓婷
   - 快速体验
-  - 流程详解
+  - [流程详解](docs/zh_CN/ppaug/EasyDataAug.md)
 - 开源数据集大全@赵军
 - 数据标注工具大全@赵军
 
