@@ -1,2 +1,4 @@
 DataImprove:
 ImageOrientation: "deploy/configs/ppcv/image_orientation.yaml"
+clarity_assessment: "deploy/configs/ppcv/clarity_assessment.yaml"
+code_exists: "deploy/configs/ppcv/code_exists.yaml"
