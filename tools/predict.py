@@ -14,16 +14,14 @@
 
 import os
 import sys
+__dir__ = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(__dir__, '../deploy/')))
 
-parent = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.abspath(os.path.join(parent, '../deploy/')))
-
-from ppcv.engine.pipeline import Pipeline
-from ppcv.utils.logger import setup_logger
 from ppcv.core.config import ArgsParser
 
-from predict_aug import PPAug
-
+from python.ppldi import PPDataImprove
+from python.ppaug import PPAug
+from utils.utils import load_yaml
 
 def argsparser():
     parser = ArgsParser()
@@ -56,23 +54,18 @@ def argsparser():
         help=
         "Choose the device you want to run, it can be: CPU/GPU/XPU, default is CPU."
     )
-    parser.add_argument(
-        "--run_type",
-        type=str,
-        default='ppeda',
-        help=
-        "Choose the mode you want to run, it can be: ppeda/ppldi, default is ppeda."
-    )
-    return parser
+    return parser.parse_args()
 
 
 if __name__ == '__main__':
-    parser = argsparser()
-    FLAGS = parser.parse_args()
-    if FLAGS.run_type == "ppldi":
-        input = os.path.abspath(FLAGS.input)
-        pipeline = Pipeline(FLAGS)
-        pipeline.run(input)
-    elif FLAGS.run_type == "ppeda":
-        ppaug = PPAug(FLAGS)
+    args = argsparser()
+    config_path = args.config
+    yaml_data = load_yaml(config_path)
+    if "DataImprove" in yaml_data:
+        ppldi = PPDataImprove(args)
+        ppldi.run()
+    elif "DataGen" in yaml_data:
+        ppaug = PPAug(args)
         ppaug.run()
+    else:
+        raise Exception("Error config")
