@@ -28,7 +28,7 @@ from predict_aug import PPAug
 def argsparser():
     parser = ArgsParser()
 
-    parser.add_argument("--config",
+    parser.add_argument("-c","--config",
                         type=str,
                         default=None,
                         help=("Path of configure"),

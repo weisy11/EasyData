@@ -100,3 +100,41 @@ class GridMask(object):
         img = (img * mask).astype(img.dtype)
 
         return img
+
+
+class GridMaskOCR(object):
+    def __init__(self, r1=4, r2=1, ratio=0.25, mode=0, prob=1., **kwargs):
+        self.r1 = r1
+        self.r2 = r2
+        self.ratio = ratio
+        self.mode = mode
+        self.prob = prob
+
+
+    def __call__(self, img):
+        if np.random.rand() > self.prob:
+            return img
+        _, h, w = img.shape
+        d = np.random.randint(h // self.r1, h // self.r2)
+        self.l = int(d * self.ratio + 0.5)
+        mask = np.ones((h, w), np.float32)
+        st = np.random.randint(d)
+        for i in range(-1, w // d + 1, 2):
+            sw = d * i + st
+            tw = sw + self.l 
+            sw = max(min(sw, w), 0)
+            tw = max(min(tw, w), 0)
+            j = np.random.randint(h // d)
+            sh = d * j + st
+            th = sh + self.l
+            sh = max(min(sh, h), 0)
+            th = max(min(th, h), 0)
+            mask[sh:th, sw:tw] *= 0
+        
+        if self.mode == 1:
+            mask = 1 - mask
+
+        mask = np.expand_dims(mask, axis=0)
+        img = (img * mask).astype(img.dtype)
+
+        return img

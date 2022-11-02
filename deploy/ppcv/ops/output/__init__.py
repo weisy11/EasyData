@@ -17,5 +17,6 @@ from .classification import ClasOutput
 from .feature_extraction import FeatureOutput
 from .detection import DetOutput
 from .keypoint import KptOutput
+from .ocr_rec import OCRRecOutput
 
-__all__ = ['OutputBaseOp', 'ClasOutput', 'FeatureOutput', 'DetOutput', 'KptOutput']
+__all__ = ['OutputBaseOp', 'ClasOutput', 'FeatureOutput', 'DetOutput', 'KptOutput', 'OCRRecOutput']
