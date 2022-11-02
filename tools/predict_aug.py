@@ -59,14 +59,16 @@ class PPAug(object):
             os.makedirs("tmp")
 
     def build_big_model(self):
-        parser = argparse.ArgumentParser()
-        parser.set_defaults(config=self.config["BigModel"]["config"])
-        return parser
+        FLAGS = argparse.Namespace(
+            **{"config": self.config["BigModel"]["config"]})
+        big_model = Pipeline(FLAGS)
+        return big_model
 
     def build_feature_compare(self):
 
-        parser = argparse.ArgumentParser()
-        parser.set_defaults(config=self.config["FeatureExtract"]["config"])
+        FLAGS = argparse.Namespace(
+            **{"config": self.config["FeatureExtract"]["config"]})
+        feature_extract = Pipeline(FLAGS)
 
         assert 'IndexProcess' in self.config.keys(
         ), "Index config not found ... "
@@ -87,7 +89,7 @@ class PPAug(object):
 
         with open(os.path.join(index_dir, "id_map.pkl"), "rb") as fd:
             self.id_map = pickle.load(fd)
-        return parser
+        return feature_extract
 
     def get_label(self, data_file, delimiter=" "):
         self.all_label = {}
@@ -132,8 +134,7 @@ class PPAug(object):
                 dataaug = GenAug(self.config)
                 dataaug(gen_num=self.gen_num, trans_label=f)
         # build gallery
-        parser = self.build_feature_compare()
-        self.feature_extract = Pipeline(parser.parse_args([]))
+        self.feature_extract = self.build_feature_compare()
 
         GalleryBuilder(self.config, self.feature_extract)
         # feather compare
@@ -171,10 +172,8 @@ class PPAug(object):
             self.compare_out)
         batch_names = []
 
-        big_parser = self.build_big_model()
-        big_model = Pipeline(big_parser.parse_args([]))
+        big_model = self.build_big_model()
         cnt = 0
-
         with open(self.big_model_out, "w") as save_file:
             for idx, img_path in enumerate(image_list):
                 file_name = os.path.join(root_path, img_path)
