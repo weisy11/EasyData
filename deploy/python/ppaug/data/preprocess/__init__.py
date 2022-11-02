@@ -12,33 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from deploy.python.ppaug.data.preprocess.ops.autoaugment import ImageNetPolicy as RawImageNetPolicy
-from deploy.python.ppaug.data.preprocess.ops.randaugment import RandAugment as RawRandAugment
-from deploy.python.ppaug.data.preprocess.ops.timm_autoaugment import RawTimmAutoAugment
-from deploy.python.ppaug.data.preprocess.ops.cutout import Cutout
+from python.ppaug.data.preprocess.ops.autoaugment import ImageNetPolicy as RawImageNetPolicy
+from python.ppaug.data.preprocess.ops.randaugment import RandAugment as RawRandAugment
+from python.ppaug.data.preprocess.ops.timm_autoaugment import RawTimmAutoAugment
+from python.ppaug.data.preprocess.ops.cutout import Cutout
 
-from deploy.python.ppaug.data.preprocess.ops.hide_and_seek import HideAndSeek
-from deploy.python.ppaug.data.preprocess.ops.random_erasing import RandomErasing
-from deploy.python.ppaug.data.preprocess.ops.grid import GridMask
+from python.ppaug.data.preprocess.ops.hide_and_seek import HideAndSeek
+from python.ppaug.data.preprocess.ops.random_erasing import RandomErasing
+from python.ppaug.data.preprocess.ops.grid import GridMask
 
-from deploy.python.ppaug.data.preprocess.ops.operators import DecodeImage
-from deploy.python.ppaug.data.preprocess.ops.operators import ResizeImage
-from deploy.python.ppaug.data.preprocess.ops.operators import CropImage
-from deploy.python.ppaug.data.preprocess.ops.operators import RandCropImage
-from deploy.python.ppaug.data.preprocess.ops.operators import RandCropImageV2
-from deploy.python.ppaug.data.preprocess.ops.operators import RandFlipImage
-from deploy.python.ppaug.data.preprocess.ops.operators import NormalizeImage
-from deploy.python.ppaug.data.preprocess.ops.operators import ToCHWImage
-from deploy.python.ppaug.data.preprocess.ops.operators import AugMix
-from deploy.python.ppaug.data.preprocess.ops.operators import Pad
-from deploy.python.ppaug.data.preprocess.ops.operators import ToTensor
-from deploy.python.ppaug.data.preprocess.ops.operators import Normalize
-from deploy.python.ppaug.data.preprocess.ops.operators import RandomHorizontalFlip
-from deploy.python.ppaug.data.preprocess.ops.operators import CropWithPadding
-from deploy.python.ppaug.data.preprocess.ops.operators import RandomInterpolationAugment
-from deploy.python.ppaug.data.preprocess.ops.operators import ColorJitter
-from deploy.python.ppaug.data.preprocess.ops.operators import RandomCropImage
-from deploy.python.ppaug.data.preprocess.ops.operators import Padv2
+from python.ppaug.data.preprocess.ops.operators import DecodeImage
+from python.ppaug.data.preprocess.ops.operators import ResizeImage
+from python.ppaug.data.preprocess.ops.operators import CropImage
+from python.ppaug.data.preprocess.ops.operators import RandCropImage
+from python.ppaug.data.preprocess.ops.operators import RandCropImageV2
+from python.ppaug.data.preprocess.ops.operators import RandFlipImage
+from python.ppaug.data.preprocess.ops.operators import NormalizeImage
+from python.ppaug.data.preprocess.ops.operators import ToCHWImage
+from python.ppaug.data.preprocess.ops.operators import AugMix
+from python.ppaug.data.preprocess.ops.operators import Pad
+from python.ppaug.data.preprocess.ops.operators import ToTensor
+from python.ppaug.data.preprocess.ops.operators import Normalize
+from python.ppaug.data.preprocess.ops.operators import RandomHorizontalFlip
+from python.ppaug.data.preprocess.ops.operators import CropWithPadding
+from python.ppaug.data.preprocess.ops.operators import RandomInterpolationAugment
+from python.ppaug.data.preprocess.ops.operators import ColorJitter
+from python.ppaug.data.preprocess.ops.operators import RandomCropImage
+from python.ppaug.data.preprocess.ops.operators import Padv2
 
 import numpy as np
 from PIL import Image

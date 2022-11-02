@@ -17,7 +17,7 @@ import copy
 import argparse
 import yaml
 
-from deploy.python.ppaug.utils import logger
+from python.ppaug.utils import logger
 
 __all__ = ['get_config']
 

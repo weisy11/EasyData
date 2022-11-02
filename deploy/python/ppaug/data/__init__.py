@@ -19,8 +19,8 @@ import numpy as np
 from paddle.io import DistributedBatchSampler, BatchSampler, DataLoader
 # from ppcls.utils import logger
 
-from deploy.python.ppaug.data import preprocess
-from deploy.python.ppaug.data.preprocess import transform
+from python.ppaug.data import preprocess
+from python.ppaug.data.preprocess import transform
 
 
 def create_operators(params, class_num=None):

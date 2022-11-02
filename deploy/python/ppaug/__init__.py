@@ -27,11 +27,11 @@ from ppcv.engine.pipeline import Pipeline
 from ppcv.utils.logger import setup_logger
 from ppcv.core.config import ArgsParser
 
-from deploy.python.ppaug.utils import config
-from deploy.python.ppaug.utils import logger
-from deploy.python.ppaug.utils.get_image_list import get_image_list_from_label_file
-from deploy.python.ppaug.gen_img import GenAug
-from deploy.python.ppaug.predict.build_gallery import GalleryBuilder
+from python.ppaug.utils import config
+from python.ppaug.utils import logger
+from python.ppaug.utils.get_image_list import get_image_list_from_label_file
+from python.ppaug.gen_img import GenAug
+from python.ppaug.predict.build_gallery import GalleryBuilder
 
 
 class PPAug(object):
