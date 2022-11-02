@@ -12,19 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
-import sys
-
-__dir__ = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(__dir__)
-sys.path.insert(0, os.path.abspath(os.path.join(__dir__, '../')))
-
 import cv2
 import faiss
 import numpy as np
 from tqdm import tqdm
 import pickle
 
-from deploy.python.ppaug.predict.predict_rec import RecPredictor
+from python.ppaug.predict.predict_rec import RecPredictor
 
 from utils import logger
 from utils import config
