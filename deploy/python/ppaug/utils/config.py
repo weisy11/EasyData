@@ -172,7 +172,7 @@ def get_config(fname, overrides=None, show=True):
 
 
 def parser():
-    parser = argparse.ArgumentParser("generic-image-rec train script")
+    parser = argparse.ArgumentParser("ppaug script")
     parser.add_argument('-c',
                         '--config',
                         type=str,
@@ -187,6 +187,11 @@ def parser():
                         '--verbose',
                         action='store_true',
                         help='wheather print the config info')
+    parser.add_argument('-m',
+                        '--model',
+                        type=str,
+                        default="ppeda",
+                        help='wheather mode to run')
     return parser
 
 

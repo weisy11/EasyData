@@ -4,6 +4,7 @@ import numpy as np
 import argparse
 import random
 from random import sample
+from tqdm import tqdm
 
 from .data.preprocess import transform
 from .data.preprocess.ops.operators import DecodeImage, ResizeImage
@@ -96,7 +97,7 @@ class GenAug(object):
         else:
             gen_img_list = self.img_list
 
-        for line in gen_img_list:
+        for line in tqdm(gen_img_list, desc='in aug {} '.format(self.ops)):
             self.all_num += 1
             try:
                 file_name, label = line.split(" ")
@@ -116,9 +117,7 @@ class GenAug(object):
                                          img_name_pure), np.array(data))
                 trans_label.write("{}/{}_{} {}\n".format(
                     self.ops, self.all_num, img_name_pure, label))
-                print("{}/{}/{}_{} {}".format(self.out_dir, self.ops,
-                                              self.all_num, img_name_pure,
-                                              label))
+                # print("{}/{}/{}_{} {}".format(self.out_dir, self.ops, self.all_num, img_name_pure, label))
             except Exception as E:
                 print(E)
                 print("error:", line)
