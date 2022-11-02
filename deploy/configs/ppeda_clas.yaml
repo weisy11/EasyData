@@ -15,7 +15,7 @@ DataGen:
   size: 224
 
 FeatureExtract:
-  config: "deploy/configs/ppeda/feature_extract.yaml"
+  config: "deploy/configs/ppcv/feature_extract.yaml"
   thresh: 0.5
   file_out: "tmp/rm_repeat.txt"
 
@@ -35,7 +35,7 @@ IndexProcess:
 
 BigModel:
   model_type: cls  # support(cls / ocr)
-  config: "deploy/configs/ppeda/classification.yaml"
+  config: "deploy/configs/ppcv/big_model_classification.yaml"
   batch_size: 8
   thresh: 0.1
   final_label: "high_socre_label.txt"
