@@ -6,8 +6,8 @@ DataGen:
     - tia_distort
     - tia_stretch
     - tia_perspective
-  data_dir: "dataset/ocr_data"
-  label_file: "dataset/ocr_data/26w_train_list.txt"
+  data_dir: "demo/ocr_data"
+  label_file: "demo/ocr_data/train_list.txt"
   aug_file: "labels/test.txt"
   model_type: &model_type ocr_rec
   delimiter: &delimiter "\t"
@@ -17,7 +17,7 @@ DataGen:
   size: 224
 
 FeatureExtract:
-  config: "deploy/configs/ppeda/feature_extract.yaml"
+  config: "deploy/configs/ppcv/feature_extract.yaml"
   thresh: 0.5
   file_out: "tmp/rm_repeat.txt"
 

@@ -67,7 +67,7 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
     - [图像方向校正工具](docs/zh_CN/LDI/image_orientation_correction.md)
     - [低质图像过滤工具](docs/zh_CN/LDI/low_quality_image_filtering.md)
 - EasyDataAugment 数据扩充方案 @晓婷
-  - 快速体验
+  - [快速体验](docs/zh_CN/ppaug/quick_start.md)
   - [流程详解](docs/zh_CN/ppaug/EasyDataAug.md)
 - 开源数据集大全@赵军
 - 数据标注工具大全@赵军
