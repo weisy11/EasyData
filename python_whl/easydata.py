@@ -144,10 +144,10 @@ def parse_args():
 class PPEDA(PPAug):
     def __init__(self, **kwargs):
         args = parse_args()
+        args.__dict__.update(**kwargs)
         self.save_list = []
         model_config = args.model_config
-        self.config = config.get_config(model_config, show=True)
-
+        self.config = config.get_config(model_config, show=False)
         self.gen_num = args.gen_num
         self.gen_ratio = args.gen_ratio
         self.ori_label = args.label_file
@@ -155,17 +155,28 @@ class PPEDA(PPAug):
         self.check_dir(self.aug_file)
         self.aug_type = args.ops
         self.delimiter = self.config["DataGen"].get('delimiter', ' ')
+        self.config["DataGen"]["data_dir"] = args.ori_data_dir
+        self.config["DataGen"]["label_file"] = args.label_file
+        self.config["DataGen"]["aug_file"] = args.aug_file
+        self.config["DataGen"]["out_dir"] = args.out_dir
+        self.config["DataGen"]["gen_ratio"] = args.gen_ratio
+        self.config["DataGen"]["gen_num"] = args.gen_num
+        self.config["DataGen"]["size"] = args.size
+        self.config["DataGen"]["model_type"] = args.model_type
         self.compare_out = args.compare_out
         self.feature_thresh = args.repeat_ratio
-        self.score_thresh = args.quality_ratio
+        self.config["FeatureExtract"]["thresh"] = args.repeat_ratio
 
         if not os.path.exists("tmp"):
             os.makedirs("tmp")
         if not "BigModel" in self.config:
             self.compare_out = args.final_label
         else:
+            self.config["BigModel"]["thresh"] = args.quality_ratio
+            self.config["BigModel"]["final_label"] = args.final_label
             self.big_model_out = args.final_label
             self.model_type = args.model_type
+        config.print_config(self.config)
 
     def predict(self):
         self.run()
@@ -175,7 +186,7 @@ class EasyData(object):
     def __init__(self, **cfg):
         self.model = cfg['model']
         if self.model == "ppeda":
-            self.pipeline = PPEDA()
+            self.pipeline = PPEDA(**cfg)
         else:
             FLAGS = init_pipeline_config(**cfg)
             self.pipeline = Pipeline(FLAGS)
