@@ -64,6 +64,8 @@ def init_pipeline_config(**cfg):
         env_config["device"] = cfg["device"]
     if "print_res" in cfg and cfg["print_res"] is not None:
         env_config["print_res"] = cfg["print_res"]
+    if "return_res" in cfg and cfg["return_res"] is not None:
+        env_config["return_res"] = cfg["return_res"]
     opt_config = {"ENV": env_config}
 
     FLAGS = argparse.Namespace(**{"config": base_cfg_path, "opt": opt_config})
@@ -175,13 +177,12 @@ class EasyData(object):
         else:
             FLAGS = init_pipeline_config(**cfg)
             self.pipeline = Pipeline(FLAGS)
-            self.input = cfg["input"]
 
-    def predict(self):
+    def predict(self, input=None):
         if self.model == "ppeda":
             return self.pipeline.predict()
         else:
-            return self.pipeline.run(self.input)
+            return self.pipeline.run(input)
 
 
 # for CLI
