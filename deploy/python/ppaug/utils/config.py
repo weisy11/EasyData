@@ -19,7 +19,7 @@ import yaml
 
 from python.ppaug.utils import logger
 
-__all__ = ['get_config']
+__all__ = ['get_config', 'print_config']
 
 
 class AttrDict(dict):
