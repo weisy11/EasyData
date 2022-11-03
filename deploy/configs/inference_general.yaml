@@ -6,18 +6,18 @@ DataGen:
     - tia_distort
     - tia_stretch
     - tia_perspective
-  data_dir: "demo/clas_data"
-  label_file: "demo/clas_data/train_list.txt"
+  data_dir: "dataset/imgnet100"
+  label_file: "dataset/imgnet100/train_list_100.txt"
   aug_file: "labels/test.txt"
   out_dir: "test"
   gen_ratio: 0
   gen_num: 5
   size: 224
-
+  
 FeatureExtract:
-  config: "deploy/configs/ppcv/feature_extract.yaml"
+  config: "deploy/configs/feature_extract.yaml"
   thresh: 0.5
-  file_out: "tmp/rm_repeat.txt"
+  file_out: "rm_repeat.txt"
 
   # indexing engine config
 IndexProcess:
@@ -33,9 +33,9 @@ IndexProcess:
   return_k: 5
   score_thres: 0.5
 
-BigModel:
-  model_type: cls  # support(cls / ocr)
-  config: "deploy/configs/ppcv/big_model_classification.yaml"
-  batch_size: 8
-  thresh: 0.1
-  final_label: "high_socre_label.txt"
+# BigModel:
+#   model_type: cls  # support(cls / ocr)
+#   config: "deploy/configs/classification.yaml"
+#   batch_size: 8
+#   thresh: 0.4
+#   final_label: "high_socre_label.txt"

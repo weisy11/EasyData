@@ -128,13 +128,14 @@ def parse_args():
     parser.add_argument("--out_dir", type=str, default="test")
     parser.add_argument("--size", type=int, default=224)
     parser.add_argument("--repeat_ratio", type=float, default=0.9)
-    parser.add_argument("--compare_out", type=str, default="rm_repeat.txt")
+    parser.add_argument("--compare_out", type=str, default="tmp/rm_repeat.txt")
     parser.add_argument("--use_big_model", type=bool, default=str2bool)
     parser.add_argument("--quality_ratio", type=float, default=0.4)
     parser.add_argument("--final_label",
                         type=str,
                         default="high_socre_label.txt")
     parser.add_argument("--model_type", type=str, default="cls")
+    parser.add_argument("--model_config", type=str, default="deploy/configs/ppeda_clas.yaml")
     return parser.parse_args()
 
 
@@ -142,22 +143,23 @@ class PPEDA(PPAug):
     def __init__(self, **kwargs):
         args = parse_args()
         self.save_list = []
-        model_config = "./deploy/configs/ppeda.yaml"
+        model_config = args.model_config
         self.config = config.get_config(model_config, show=True)
 
         self.gen_num = args.gen_num
         self.gen_ratio = args.gen_ratio
-
         self.ori_label = args.label_file
         self.aug_file = args.aug_file
         self.check_dir(self.aug_file)
         self.aug_type = args.ops
-
-        self.feature_thresh = args.repeat_ratio
+        self.delimiter = self.config["DataGen"].get('delimiter', ' ')
         self.compare_out = args.compare_out
+        self.feature_thresh = args.repeat_ratio
         self.score_thresh = args.quality_ratio
-        self.use_big_model = args.use_big_model
-        if not args.use_big_model:
+
+        if not os.path.exists("tmp"):
+            os.makedirs("tmp")
+        if not "BigModel" in self.config:
             self.compare_out = args.final_label
         else:
             self.big_model_out = args.final_label
