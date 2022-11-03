@@ -28,8 +28,8 @@ def get_readme():
 
 setup(
     name='easydata',
-    packages=['easydata'],
-    package_dir={'easydata': ''},
+    packages=['easydata', 'easydata.deploy'],
+    package_dir={'easydata': 'python_whl', 'easydata.deploy': 'deploy'},
     include_package_data=True,
     entry_points={"console_scripts": ["easydata=easydata.easydata:main"]},
     version='0.0.0',

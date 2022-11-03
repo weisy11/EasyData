@@ -1,6 +1,9 @@
-numpy
-shapely
-scikit-image
-imgaug
+opencv-python
+Pillow
+scipy>=1.0.0
+faiss_cpu==1.7.1.post2
+PyYAML>=5.1
 tqdm
-faiss-cpu==1.7.1.post2
+Shapely
+pyclipper
+matplotlib

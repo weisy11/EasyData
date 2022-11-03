@@ -12,8 +12,8 @@ ENV:
 MODEL:
   - ClassificationOp:
       name: cls
-      param_path: https://paddleclas.bj.bcebos.com/models/PULC/inference/image_orientation_infer/inference.pdiparams
-      model_path: https://paddleclas.bj.bcebos.com/models/PULC/inference/image_orientation_infer/inference.pdmodel
+      param_path: https://paddleclas.bj.bcebos.com/models/PULC/inference/clarity_assessment_infer/inference.pdiparams
+      model_path: https://paddleclas.bj.bcebos.com/models/PULC/inference/clarity_assessment_infer/inference.pdmodel
       batch_size: 8
       last_ops:
         - input
@@ -33,8 +33,8 @@ MODEL:
             axis: 0
       PostProcess:
         - Topk:
-            topk: 5
-            class_id_map_file: utils/label_map/image_orientation_label_list.txt
+            topk: 1
+            class_id_map_file: deploy/utils/label_map/clarity_assessment_label_list.txt
       Inputs:
         - image
 
