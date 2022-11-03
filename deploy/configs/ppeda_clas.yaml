@@ -6,8 +6,8 @@ DataGen:
     - tia_distort
     - tia_stretch
     - tia_perspective
-  data_dir: "dataset/imgnet100"
-  label_file: "dataset/imgnet100/train_list_100.txt"
+  data_dir: "demo/clas_data"
+  label_file: "demo/clas_data/train_list.txt"
   aug_file: "labels/test.txt"
   out_dir: "test"
   gen_ratio: 0

@@ -6,8 +6,8 @@ DataGen:
     - tia_distort
     - tia_stretch
     - tia_perspective
-  data_dir: "dataset/shitu_data"
-  label_file: "dataset/shitu_data/train_reg_all_data_small.txt"
+  data_dir: "demo/shitu_data"
+  label_file: "demo/shitu_data/train_list.txt"
   aug_file: "labels/test.txt"
   out_dir: "test"
   gen_ratio: 0
@@ -15,7 +15,7 @@ DataGen:
   size: 224
 
 FeatureExtract:
-  config: "deploy/configs/ppeda/feature_extract.yaml"
+  config: "deploy/configs/ppcv/feature_extract.yaml"
   thresh: 0.5
   file_out: "tmp/rm_repeat.txt"
 
