@@ -1,5 +1,4 @@
 ENV:
-  output_dir: output
   run_mode: paddle
   device: GPU
   min_subgraph_size: 3
@@ -7,13 +6,14 @@ ENV:
   trt_calib_mode: False
   cpu_threads: 1
   trt_use_static: False
-  save_output: True
+  return_res: True
+  print_res: False
 
 MODEL:
   - ClassificationOp:
       name: cls
-      param_path: https://paddleclas.bj.bcebos.com/models/PULC/inference/image_orientation_infer/inference.pdiparams
-      model_path: https://paddleclas.bj.bcebos.com/models/PULC/inference/image_orientation_infer/inference.pdmodel
+      param_path: paddlecv://models/PPLCNet_x1_0_infer/inference.pdiparams
+      model_path: paddlecv://models/PPLCNet_x1_0_infer/inference.pdmodel
       batch_size: 8
       last_ops:
         - input
@@ -33,8 +33,8 @@ MODEL:
             axis: 0
       PostProcess:
         - Topk:
-            topk: 5
-            class_id_map_file: utils/label_map/image_orientation_label_list.txt
+            topk: 1
+            class_id_map_file: tests/imagenet1k_label_list.txt
       Inputs:
         - image
 

@@ -24,25 +24,23 @@ from .base import OutputBaseOp
 from ppcv.utils.logger import setup_logger
 from ppcv.core.workspace import register
 
-logger = setup_logger('ClasOutput')
+logger = setup_logger('OCRRecOutput')
 
 
 @register
-class ClasOutput(OutputBaseOp):
+class OCRRecOutput(OutputBaseOp):
 
     def __init__(self, model_cfg, env_cfg):
-        super(ClasOutput, self).__init__(model_cfg, env_cfg)
+        super(OCRRecOutput, self).__init__(model_cfg, env_cfg)
 
     def __call__(self, inputs):
         total_res = []
         for input in inputs:
-            fn, image, class_ids, scores, label_names = input["fn"], input[
-                "image"], input["class_ids"], input["scores"], input[
-                    "label_names"]
+            fn, image, rec_text, rec_score = input["fn"], input[
+                "image"], input["rec_text"], input["rec_score"]
             res = dict(filename=fn,
-                       class_ids=class_ids,
-                       scores=scores,
-                       label_names=label_names)
+                       rec_text=rec_text,
+                       rec_score=rec_score)
             if self.frame_id != -1:
                 res.update({'frame_id': frame_id})
             if self.print_res:
@@ -56,7 +54,7 @@ class ClasOutput(OutputBaseOp):
             if self.save_res or self.return_res:
                 total_res.append(res)
         if self.save_res:
-            res_file_name = 'clas_output.json'
+            res_file_name = 'ocr_rec_output.json'
             out_path = os.path.join(self.output_dir, res_file_name)
             logger.info('Save output result to {}'.format(out_path))
             with open(out_path, 'w') as f:
