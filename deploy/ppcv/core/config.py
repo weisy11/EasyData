@@ -77,6 +77,12 @@ class ConfigParser(object):
         env_cfg = cfg['ENV']
         model_cfg = cfg['MODEL']
 
+        def str2num(v):
+            try:
+                return eval(v)
+            except Exception:
+                return v
+
         def merge(cfg, arg):
             merge_cfg = copy.deepcopy(cfg)
             for k, v in env_cfg.items():
@@ -87,13 +93,26 @@ class ConfigParser(object):
                         merge_cfg[k] = merge(v, arg)
             return merge_cfg
 
-        def merge_opt(cfg, arg):
-            for k, v in arg.items():
-                if (k in cfg and isinstance(cfg[k], dict) and
-                        isinstance(arg[k], collectionsAbc.Mapping)):
-                    merge_opt(cfg[k], arg[k])
+        def override(cfg, arg):
+            assert isinstance(cfg, (dict, list))
+            if isinstance(cfg, list):
+                key = list(arg.keys())[0]
+                idx = str2num(key)
+                arg = arg[key]
+                if isinstance(arg, (dict, list)):
+                    override(cfg[idx], arg)
                 else:
-                    cfg[k] = arg[k]
+                    cfg[idx] = arg
+            else:
+                key = list(arg.keys())[0]
+                arg = arg[key]
+                if isinstance(arg, (dict, list)):
+                    override(cfg[key], arg)
+                else:
+                    cfg[key] = arg
+
+        def merge_opt(cfg, arg):
+            override(cfg, arg)
             return cfg
 
         args_dict = vars(args)
