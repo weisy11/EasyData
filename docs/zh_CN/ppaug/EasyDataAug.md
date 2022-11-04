@@ -7,7 +7,7 @@
 
 ## 1.1 使用背景
 
-视觉任务的很多深度学习算法都依赖于大量的训练数据，但是真实数据的标注需要耗费人力和时间成本，PP-EDA主要解决用户在缺少数据的情况下如何提升原有模型的精度。使用本工具的前提是拥有一定的训练数据，并且训练出了一个基模型。另外，PP-EDA工具目前只支持整图方向任务，也即图像分类、文本识别类似的场景，对于检测场景或者是其他多点标注的场景暂不支持。
+训练视觉任务通常依赖大量的数据，但是真实数据的标注需要耗费人力和时间成本，PP-EDA主要解决用户在缺少数据的情况下如何提升原有模型的精度。使用本工具的前提是拥有一定的训练数据，并且训练出了一个基模型。另外，PP-EDA工具目前只支持整图方向任务，也即图像分类、文本识别类似的场景，对于检测场景或者是其他多点标注的场景暂不支持。
 
 ## 2. 环境准备
 
@@ -57,7 +57,7 @@ images/xxxx2.jpg        用科技让复杂的世界更简单
 
 ## 4. 数据自动扩充
 
-在准备好环境和数据后，可以使用PP-EDA工具进行数据扩充，主要包含三个步骤：离线增强数据、低质数据过滤、重复数据过滤，下面依次进行介绍。
+完成环境和数据准备后，使用PP-EDA工具进行自动数据扩充。整个流程包含三个部分：离线增强数据、低质数据过滤、重复数据过滤，下面依次进行介绍。
 
 ![eda](../../images/aug/eda_pipeline.png)
 
@@ -191,11 +191,11 @@ BigModel:
 
 | 实验任务 | 模型 | 配置文件 | baseline精度 | 增广后精度 |
 | :--: | :--: | :--: |:--: |:------: |
-|  文本识别    | ch_PP-OCRv3_rec | [config](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/configs/rec/PP-OCRv3/ch_PP-OCRv3_rec.yml)  | 72.95%   |   74.15% (+1.20%)  | 
-|  图像分类    | PP-LCNet        | [config](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/ImageNet/PPLCNet/PPLCNet_x1_0.yaml) | 80.10%   |   84.47% (+4.37%)  |
-|  图像分类    | PP-HGNet        | [config](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/ImageNet/PPHGNet/PPHGNet_small.yaml) |   90.80%   |   91.33% (+0.53%)  |
-|  识图任务    | PP-LCNetv2      | [config](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/GeneralRecognitionV2/GeneralRecognitionV2_PPLCNetV2_base.yaml) | 66.80%   |   67.70% (+0.90%)  |
-|  整图方向分类 | PP-LCNet       | [config](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/image_orientation/PPLCNet_x1_0.yaml) | 89.90%   |   90.12% (+0.22%)  |
-| 广告码图像过滤| PP-LCNet        | [config](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/code_exists/PPLCNet_x1_0.yaml) |   95.29%   |   95.73% (+0.44%)  |
+|  文本识别    | ch_PP-OCRv3_rec | [ch_PP-OCRv3_rec.yml](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/configs/rec/PP-OCRv3/ch_PP-OCRv3_rec.yml)  | 72.95%   |   74.15% (+1.20%)  | 
+|  图像分类    | PP-LCNet        | [PPLCNet_x1_0.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/ImageNet/PPLCNet/PPLCNet_x1_0.yaml) | 80.10%   |   84.47% (+4.37%)  |
+|  图像分类    | PP-HGNet        | [PPHGNet_small.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/ImageNet/PPHGNet/PPHGNet_small.yaml) |   90.80%   |   91.33% (+0.53%)  |
+|  识图任务    | PP-LCNetv2      | [GeneralRecognitionV2_PPLCNetV2_base.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/GeneralRecognitionV2/GeneralRecognitionV2_PPLCNetV2_base.yaml) | 66.80%   |   67.70% (+0.90%)  |
+|  整图方向分类 | PP-LCNet       | [PPLCNet_x1_0.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/image_orientation/PPLCNet_x1_0.yaml) | 89.90%   |   90.12% (+0.22%)  |
+| 广告码图像过滤| PP-LCNet        | [PPLCNet_x1_0.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/code_exists/PPLCNet_x1_0.yaml) |   95.29%   |   95.73% (+0.44%)  |
 
 可以看出，使用 PP-EDA 工具对数据进行增广后在不同场景中都有不同程度的效果提升。
