@@ -1,4 +1,5 @@
 DataGen:
+  mode: aug
   ops:
     - randaugment
     - random_erasing
@@ -8,8 +9,8 @@ DataGen:
     - tia_perspective
   data_dir: "demo/shitu_data"
   label_file: "demo/shitu_data/train_list.txt"
-  aug_file: "labels/test.txt"
-  out_dir: "test"
+  gen_label: &gen_label "labels/test.txt"
+  img_save_folder: &img_save_folder "test"
   gen_ratio: 0
   gen_num: 5
   size: 224
@@ -22,9 +23,9 @@ FeatureExtract:
   # indexing engine config
 IndexProcess:
   index_method: "HNSW32" # supported: HNSW32, IVF, Flat
-  image_root: "./test"
+  image_root: *img_save_folder
   index_dir: "./augdata/all_aug"
-  data_file:  "./labels/test.txt"
+  all_label_file:  *gen_label
   index_operation: "new" # suported: "append", "remove", "new"
   delimiter: " "
   dist_type: "IP"
@@ -32,4 +33,3 @@ IndexProcess:
   batch_size: 32
   return_k: 5
   score_thres: 0.5
-

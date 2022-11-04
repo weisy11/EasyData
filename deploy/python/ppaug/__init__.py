@@ -31,6 +31,7 @@ from python.ppaug.utils import config
 from python.ppaug.utils import logger
 from python.ppaug.utils.get_image_list import get_image_list_from_label_file
 from python.ppaug.gen_img import GenAug
+from python.ppaug.gen_ocr_rec import GenOCR
 from python.ppaug.predict.build_gallery import GalleryBuilder
 
 
@@ -40,14 +41,30 @@ class PPAug(object):
         self.save_list = []
         config_args = config.parse_args()
         self.config = config.get_config(cfg.config, show=True)
-        self.gen_num = self.config["DataGen"]["gen_num"]
-        self.gen_ratio = self.config["DataGen"]["gen_ratio"]
 
-        self.aug_file = self.config["DataGen"]["aug_file"]
-        self.delimiter = self.config["DataGen"].get('delimiter', ' ')
-        self.check_dir(self.aug_file)
-        self.ori_label = self.config["DataGen"]["label_file"]
-        self.aug_type = self.config["DataGen"]["ops"]
+        gen_params = self.config["DataGen"]
+        self.gen_num = gen_params["gen_num"]
+        self.output_dir = gen_params["img_save_folder"]
+        self.gen_label = gen_params["gen_label"]
+        self.gen_mode = gen_params.get('mode', 'aug').lower()
+        assert self.gen_mode in [
+            "ocr", "aug"
+        ], 'param lang must in {}, but got {}'.format(["ocr", "aug"],
+                                                      self.gen_mode)
+        if self.gen_mode == "ocr":
+            self.bg_img_per_word_num = gen_params["bg_num_per_word"]
+            self.threads = gen_params["threads"]
+            self.bg_img_dir = gen_params["bg_img_dir"]
+            self.font_dir = gen_params["font_dir"]
+            self.corpus_file = gen_params["corpus_file"]
+            self.gen_ocr = GenOCR(gen_params["config"])
+            self.delimiter = gen_params.get('delimiter', '\t')
+        elif self.gen_mode == "aug":
+            self.gen_ratio = gen_params["gen_ratio"]
+            self.delimiter = gen_params.get('delimiter', ' ')
+            self.check_dir(self.gen_label)
+            self.ori_label = gen_params["label_file"]
+            self.aug_type = gen_params["ops"]
 
         self.compare_out = self.config["FeatureExtract"]["file_out"]
         self.check_dir(self.compare_out)
@@ -61,6 +78,10 @@ class PPAug(object):
             self.score_thresh = self.config["BigModel"]["thresh"]
             self.big_model_out = self.config["BigModel"]["final_label"]
             self.model_type = self.config["BigModel"]["model_type"]
+            assert self.model_type in [
+                "ocr_rec", "cls"
+            ], 'param lang must in {}, but got {}'.format(["ocr_rec", "cls"],
+                                                          self.model_type)
             FLAGS = argparse.Namespace(
                 **{"config": self.config["BigModel"]["config"]})
             big_model = Pipeline(FLAGS)
@@ -80,6 +101,7 @@ class PPAug(object):
         self.return_k = self.config['IndexProcess']['return_k']
 
         index_dir = self.config["IndexProcess"]["index_dir"]
+        self.all_label_file = self.config["IndexProcess"]["all_label_file"]
 
         if self.config['IndexProcess'].get("dist_type") == "hamming":
             self.Searcher = faiss.read_index_binary(
@@ -128,16 +150,46 @@ class PPAug(object):
             os.makedirs(os.path.dirname(path))
         return
 
+    def concat_file(self, label_dir, all_file):
+        filenames = os.listdir(label_dir)
+        assert len(filenames) > 0, "Can not find any file in {}".format(
+            label_dir)
+        self.check_dir(all_file)
+        f = open(all_file, 'w')
+        for filename in filenames:
+            if os.path.isfile(os.path.join(label_dir, filename)):
+                filepath = label_dir + '/' + filename
+                for line in open(filepath):
+                    if len(line) != 0:
+                        f.writelines(line)
+            else:
+                logger.info("{} is not the label file".format(filename))
+        f.close()
+        return all_file
+
     def run(self):
         # gen aug data
-        logger.info('{}Start gen aug img{}'.format('*' * 10, '*' * 10))
-        with open(self.aug_file, "w") as f:
-            for aug_type in self.aug_type:
-                self.config["DataGen"]["aug"] = aug_type
-                dataaug = GenAug(self.config)
-                dataaug(gen_num=self.gen_num, trans_label=f)
+        logger.info('{}Start Gen Img{}'.format('*' * 10, '*' * 10))
 
-        # # build gallery
+        if self.gen_mode == "ocr":
+            self.gen_ocr(self.bg_img_dir, self.font_dir, self.corpus_file,
+                         self.gen_num, self.output_dir,
+                         self.bg_img_per_word_num, self.threads)
+
+            self.concat_file(label_dir=self.output_dir,
+                             all_file=self.gen_label)
+
+        else:
+            with open(self.gen_label, "w") as f:
+                for aug_type in self.aug_type:
+                    self.config["DataGen"]["aug"] = aug_type
+                    dataaug = GenAug(self.config)
+                    dataaug(gen_num=self.gen_num, trans_label=f)
+
+        assert os.path.getsize(
+            self.gen_label
+        ), "Data generate Failed, Please check data_dir and label_file. "
+        # build gallery
         logger.info('{}Start compare img feature{}'.format('*' * 10, '*' * 10))
         feature_extract = self.build_feature_compare()
 
@@ -145,7 +197,8 @@ class PPAug(object):
         self.build_search()
         # feather compare
         root_path = self.config["IndexProcess"]["image_root"]
-        image_list, gt = get_image_list_from_label_file(self.aug_file, self.delimiter)
+        image_list, gt = get_image_list_from_label_file(
+            self.all_label_file, self.delimiter)
 
         with open("tmp/repeat.txt", "w") as write_file:
             for idx, image_file in enumerate(image_list):
@@ -168,7 +221,7 @@ class PPAug(object):
                                      str(output[0]['rec_scores'][1]) + "\n")
 
         # rm repeat
-        all_label = self.get_label(self.aug_file, self.delimiter)
+        all_label = self.get_label(self.all_label_file, self.delimiter)
         final_count = self.rm_repeat(compare_file="tmp/repeat.txt",
                                      out_file=self.compare_out,
                                      thresh=self.feature_thresh)
@@ -177,7 +230,8 @@ class PPAug(object):
             self.compare_out))
 
         # filter low score data
-        image_list, gt_labels = get_image_list_from_label_file(self.compare_out, self.delimiter)
+        image_list, gt_labels = get_image_list_from_label_file(
+            self.compare_out, self.delimiter)
         batch_names = []
         batch_labels = []
 
@@ -217,13 +271,15 @@ class PPAug(object):
                                 for r in result_dict["scores"]))
                             if float(scores_str[1:-1]) > self.score_thresh:
                                 save_file.write("{}{}{}\n".format(
-                                    filename, self.delimiter, batch_labels[number]))
+                                    filename, self.delimiter,
+                                    batch_labels[number]))
                         elif self.model_type == "ocr_rec":
                             filename = batch_names[number]
                             scores = result_dict["rec_score"]
                             if scores > self.score_thresh:
                                 save_file.write("{}{}{}\n".format(
-                                    filename, self.delimiter, batch_labels[number]))
+                                    filename, self.delimiter,
+                                    batch_labels[number]))
                     batch_labels = []
                     batch_names = []
         logger.info(
