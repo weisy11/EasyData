@@ -150,7 +150,7 @@ easydata --model code_exists --input ./imgs/ --device cpu
 
 ### 2.2 Python脚本使用
 
-EasyData 同样可以通过 whl 包的形式集成到 Python 脚本中。在 Python 脚本中使用时，只需 import 导入 EasyData 包，并实例化 EasyData 对象即可进行预测。
+EasyData 同样可以通过 whl 包的形式集成到 Python 脚本中。在 Python 脚本中使用时，只需 import 导入 EasyData 包，并实例化 EasyData 对象即可进行预测。以图像方向矫正模型为例，使用方法为：
 
 ```python
 from easydata import EasyData
