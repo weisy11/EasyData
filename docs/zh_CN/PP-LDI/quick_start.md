@@ -1,4 +1,4 @@
-# LDI快速开始
+# PP-LDI快速开始
 
 ------
 
@@ -144,7 +144,7 @@ easydata --model code_exists --input ./imgs/ --device cpu
 预测结果中，类别 id 与分类标签的映射关系如下：
 
 * 0: no code，表示该图像中不存在广告码；
-* 1: clarity，表示该图像中存在广告码。
+* 1: contains code，表示该图像中存在广告码。
 
 <a name="22"></a>
 
