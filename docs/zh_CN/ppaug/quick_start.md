@@ -117,8 +117,8 @@ ppeda.predict()
 | model_config | 使用的场景模型配置 | deploy/configs/ppeda_clas.yaml |
 | ori_data_dir | 原始数据目录 | None |
 | label_file | 原始数据标签 | None |
-| aug_file | 增广后的数据标签 | labels/test.txt |
-| out_dir | 增广后的图像存储目录 | test |
+| gen_label | 增广后的数据标签 | labels/test.txt |
+| img_save_folder | 增广后的图像存储目录 | test |
 | size | 输出图像尺寸 | 224 |
 | gen_num | 每种增广生成的图像数量 | 10 |
 | gen_ratio | 使用原始数据的数量比例，优先级低于gen_num；如果gen_num大于原始数据量，该参数生效 | 0 |
