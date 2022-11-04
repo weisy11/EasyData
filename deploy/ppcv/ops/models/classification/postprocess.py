@@ -57,13 +57,15 @@ class Topk(object):
                 score_list.append(probs[i].item())
                 if self.class_id_map is not None:
                     label_name_list.append(self.class_id_map[i.item()])
+            
+            label_name = label_name_list
+            
             result = {
                 output_keys[0]: clas_id_list,
                 output_keys[1]: np.around(
                     score_list, decimals=5).tolist(),
+                output_keys[2]: label_name
             }
-            if label_name_list is not None:
-                result[output_keys[2]] = label_name_list
             y.append(result)
         return y
 
@@ -85,10 +87,9 @@ class ThreshOutput(object):
                 rtn_id = top1_id
             else:
                 rtn_id = self.default_label_index
+            
+            label_name = self.class_id_map[rtn_id] if self.class_id_map is not None else ""
 
-            result = {output_keys[0]: rtn_id, output_keys[1]: probs[rtn_id]}
-            if self.class_id_map is not None:
-                result[output_keys[2]] = self.class_id_map[rtn_id]
-
+            result = {output_keys[0]: rtn_id, output_keys[1]: probs[rtn_id], output_keys[2]: label_name}
             y.append(result)
         return y
