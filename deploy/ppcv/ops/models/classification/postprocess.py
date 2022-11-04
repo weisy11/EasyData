@@ -16,33 +16,34 @@ import os
 import numpy as np
 
 
+def parse_class_id_map(class_id_map_file):
+    if class_id_map_file is None:
+        return None
+
+    if not os.path.exists(class_id_map_file):
+        print(
+            "Warning: If want to use your own label_dict, please input legal path!\nOtherwise label_names will be empty!"
+        )
+        return None
+
+    try:
+        class_id_map = {}
+        with open(class_id_map_file, "r") as fin:
+            lines = fin.readlines()
+            for line in lines:
+                partition = line.split("\n")[0].partition(" ")
+                class_id_map[int(partition[0])] = str(partition[-1])
+    except Exception as ex:
+        print(ex)
+        class_id_map = None
+    return class_id_map
+
+
 class Topk(object):
     def __init__(self, topk=1, class_id_map_file=None):
         assert isinstance(topk, (int, ))
-        self.class_id_map = self.parse_class_id_map(class_id_map_file)
+        self.class_id_map = parse_class_id_map(class_id_map_file)
         self.topk = topk
-
-    def parse_class_id_map(self, class_id_map_file):
-        if class_id_map_file is None:
-            return None
-
-        if not os.path.exists(class_id_map_file):
-            print(
-                "Warning: If want to use your own label_dict, please input legal path!\nOtherwise label_names will be empty!"
-            )
-            return None
-
-        try:
-            class_id_map = {}
-            with open(class_id_map_file, "r") as fin:
-                lines = fin.readlines()
-                for line in lines:
-                    partition = line.split("\n")[0].partition(" ")
-                    class_id_map[int(partition[0])] = str(partition[-1])
-        except Exception as ex:
-            print(ex)
-            class_id_map = None
-        return class_id_map
 
     def __call__(self, x, output_keys):
         y = []
@@ -63,5 +64,31 @@ class Topk(object):
             }
             if label_name_list is not None:
                 result[output_keys[2]] = label_name_list
+            y.append(result)
+        return y
+
+
+class ThreshOutput(object):
+    def __init__(self, threshold, default_label_index=0, class_id_map_file=None):
+        self.threshold = threshold
+        self.default_label_index = default_label_index
+        self.class_id_map = parse_class_id_map(class_id_map_file)
+
+    def __call__(self, x, output_keys):
+        y = []
+        for idx, probs in enumerate(x):
+            index = probs.argsort(axis=0)[::-1].astype("int32")
+            top1_id = index[0]
+            top1_score = probs[top1_id]
+            
+            if top1_score > self.threshold:
+                rtn_id = top1_id
+            else:
+                rtn_id = self.default_label_index
+
+            result = {output_keys[0]: rtn_id, output_keys[1]: probs[rtn_id]}
+            if self.class_id_map is not None:
+                result[output_keys[2]] = self.class_id_map[rtn_id]
+
             y.append(result)
         return y
