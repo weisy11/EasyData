@@ -21,12 +21,28 @@ sys.path.insert(0, os.path.abspath(os.path.join(parent, './deploy/')))
 import argparse
 
 from ppcv.engine.pipeline import Pipeline
+from utils.utils import load_yaml
 from python.ppaug import PPAug
 from python.ppaug.utils import config
 
 __all__ = ['EasyData']
 
 VERSION = '0.5.0.1'
+
+
+class LoopDict(dict):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    
+    def loop_set(self, key_list, value):
+        # for key in key_list:
+        key = key_list[0]
+        if key not in self:
+            self[key] = LoopDict()
+        if len(key_list) == 1:
+            self[key] = value
+        else:
+            self[key].loop_set(key_list[1:], value)
 
 
 def argsparser():
@@ -53,7 +69,8 @@ def init_pipeline_config(**cfg):
     base_cfg_path = f"./deploy/configs/ppcv/{model_name}.yaml"
     __dir__ = os.path.dirname(__file__)
     base_cfg_path = os.path.join(__dir__, base_cfg_path)
-
+    base_cfg = load_yaml(base_cfg_path)
+                 
     # ENV config
     env_config = {}
     if "output_dir" in cfg and cfg["output_dir"]:
@@ -68,9 +85,21 @@ def init_pipeline_config(**cfg):
         env_config["return_res"] = cfg["return_res"]
 
     # MODEL config
-    model_config = {}
+    model_config = LoopDict()
+    # replace path of class_id_map_file by absolute path
+    for model_cfg in base_cfg["MODEL"]:
+        op_name = list(model_cfg.keys())[0]
+        if op_name == "ClassificationOp":
+            postprocess_ops = model_cfg[op_name].get("PostProcess", [])
+            for postprocess_op in postprocess_ops:
+                postprocess_op_name = list(postprocess_op.keys())[0]
+                if postprocess_op_name in ["ThreshOutput", "Topk"]:
+                    class_id_map_file_path = postprocess_op[postprocess_op_name].get("class_id_map_file", None)
+                    if class_id_map_file_path is not None:
+                        class_id_map_file_path = os.path.join(__dir__, class_id_map_file_path)
+                        model_config.loop_set(["0", "ClassificationOp", "PostProcess", "0", postprocess_op_name, "class_id_map_file"], class_id_map_file_path)
     if "threshold" in cfg and cfg["threshold"]:
-        model_config = {**model_config, **{"0": {"ClassificationOp": {"PostProcess": {"0": {"ThreshOutput": {"threshold": cfg["threshold"]}}}}}}}
+        model_config.loop_set(["0", "ClassificationOp", "PostProcess", "0", "ThreshOutput", "threshold"], cfg["threshold"])
 
     opt_config = {"MODEL": model_config, "ENV": env_config}
     FLAGS = argparse.Namespace(**{"config": base_cfg_path, "opt": opt_config})
