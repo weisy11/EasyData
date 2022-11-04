@@ -61,11 +61,12 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
 ## 📖 文档教程
 
 - 运行环境准备 @晓婷
-- Light-weight Data Improve 数据质量提升方案
+- **L**ight-weight **D**ata **I**mprove 数据质量提升方案
   - [快速体验](docs/zh_CN/PP-LDI/quick_start.md)
   - 数据质量提升工具集
     - [图像方向校正工具](docs/zh_CN/PP-LDI/image_orientation_correction.md)
-    - [低质图像过滤工具](docs/zh_CN/PP-LDI/low_quality_image_filtering.md)
+    - [模糊图像过滤工具](docs/zh_CN/PP-LDI/blured_image_filtering.md)
+    - [广告码图像过滤工具](docs/zh_CN/PP-LDI/code_image_filtering.md)
 - EasyDataAugment 数据扩充方案 @晓婷
   - [快速体验](docs/zh_CN/ppaug/quick_start.md)
   - [流程详解](docs/zh_CN/ppaug/EasyDataAug.md)
