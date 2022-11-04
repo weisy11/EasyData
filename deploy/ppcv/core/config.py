@@ -96,20 +96,20 @@ class ConfigParser(object):
         def override(cfg, arg):
             assert isinstance(cfg, (dict, list))
             if isinstance(cfg, list):
-                key = list(arg.keys())[0]
-                idx = str2num(key)
-                arg = arg[key]
-                if isinstance(arg, (dict, list)):
-                    override(cfg[idx], arg)
-                else:
-                    cfg[idx] = arg
+                for key in arg.keys():
+                    idx = str2num(key)
+                    value = arg[key]
+                    if isinstance(value, (dict, list)):
+                        override(cfg[idx], value)
+                    else:
+                        cfg[idx] = value
             else:
-                key = list(arg.keys())[0]
-                arg = arg[key]
-                if isinstance(arg, (dict, list)):
-                    override(cfg[key], arg)
-                else:
-                    cfg[key] = arg
+                for key in arg.keys():
+                    value = arg[key]
+                    if isinstance(value, (dict, list)):
+                        override(cfg[key], value)
+                    else:
+                        cfg[key] = value
 
         def merge_opt(cfg, arg):
             override(cfg, arg)
