@@ -1,4 +1,4 @@
-# LDI快速开始
+# PP-LDI快速开始
 
 ------
 
@@ -144,13 +144,13 @@ easydata --model code_exists --input ./imgs/ --device cpu
 预测结果中，类别 id 与分类标签的映射关系如下：
 
 * 0: no code，表示该图像中不存在广告码；
-* 1: clarity，表示该图像中存在广告码。
+* 1: contains code，表示该图像中存在广告码。
 
 <a name="22"></a>
 
 ### 2.2 Python脚本使用
 
-EasyData 同样可以通过 whl 包的形式集成到 Python 脚本中。在 Python 脚本中使用时，只需 import 导入 EasyData 包，并实例化 EasyData 对象即可进行预测。
+EasyData 同样可以通过 whl 包的形式集成到 Python 脚本中。在 Python 脚本中使用时，只需 import 导入 EasyData 包，并实例化 EasyData 对象即可进行预测。以图像方向矫正模型为例，使用方法为：
 
 ```python
 from easydata import EasyData
