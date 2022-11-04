@@ -41,8 +41,31 @@
 <a name="12"></a>
 ### 1.2 安装 EasyData whl 包
 
+您可以从 PyPi 安装我们最新的发布版本，也可以获取 EasyData 项目代码本地安装。
+
+<a name="121"></a>
+### 1.2.1 PyPi
+
+直接通过 pip 工具从 PyPi 等源进行安装，命令如下：
+
 ```bash
 pip install easydata
+```
+
+<a name="122"></a>
+### 1.2.2 本地安装
+
+本地安装需要先获取 EasyData 项目代码，命令如下：
+
+```bash
+git clone https://github.com/Paddle/EasyData.git
+```
+
+然后进入 EasyData 项目根目录并安装，命令如下：
+
+```bash
+cd EasyData
+python setup.py install
 ```
 
 <a name="2"></a>
