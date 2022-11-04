@@ -174,7 +174,8 @@ class PPAug(object):
         if self.gen_mode == "ocr":
             self.gen_ocr(self.bg_img_dir, self.font_dir, self.corpus_file,
                          self.gen_num, self.output_dir,
-                         self.bg_img_per_word_num, self.threads)
+                         self.bg_img_per_word_num, self.threads,
+                         self.delimiter)
 
             self.concat_file(label_dir=self.output_dir,
                              all_file=self.gen_label)

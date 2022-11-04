@@ -39,6 +39,8 @@ def parse_args():
 
 def get_image_file_list(img_file):
     imgs_lists = []
+    if not os.path.exists(img_file):
+        raise Exception("{} does not exist!".format(img_file))
     with open(img_file, "r") as file:
         for data_line in file.readlines():
             imgs_lists.append(data_line)

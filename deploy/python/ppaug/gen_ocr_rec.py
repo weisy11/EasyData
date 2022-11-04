@@ -134,9 +134,16 @@ class GenOCR(object):
     def __init__(self, config):
         self.reader = Renderer(load_config(config))
 
-    def gen_ocr_img(self, word_list, label_file, save_number, bg_img_dir,
-                    font_path, all_count, bg_img_per_word_num,
-                    img_save_folder):
+    def gen_ocr_img(self,
+                    word_list,
+                    label_file,
+                    save_number,
+                    bg_img_dir,
+                    font_path,
+                    all_count,
+                    bg_img_per_word_num,
+                    img_save_folder,
+                    delimiter="\t"):
         os.makedirs(img_save_folder, exist_ok=True)
         count = 0
         label_file = io.open(label_file, "w", encoding="utf-8")
@@ -160,8 +167,8 @@ class GenOCR(object):
                 file_name = os.path.basename(bg_path)
                 img_save_path = "{}/{}_{}".format(cur_thread_img_save_folder,
                                                   count, file_name)
-                label_file.write("{}/{}_{}\t{}\n".format(
-                    save_number, count, file_name, word_list[0]))
+                label_file.write("{}/{}_{}{}{}\n".format(
+                    save_number, count, file_name, delimiter, word_list[0]))
                 cv2.imwrite(img_save_path, out[:, :, ::-1])
                 label_file.flush()
                 count += 1
