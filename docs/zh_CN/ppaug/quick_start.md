@@ -92,7 +92,7 @@ easydata --model ppeda --ori_data_dir demo/ocr_data/ --label_file demo/ocr_data/
 #### 2.1.3 图像识别模型
 
 ```bash
-easydata --model ppeda --ori_data_dir dataset/shitu_data --label_file dataset/shitu_data/train_reg_all_data_small.txt --model_config deploy/configs/ppeda_shitu.yaml
+easydata --model ppeda --ori_data_dir demo/shitu_data --label_file demo/shitu_data/train_list.txt --model_config deploy/configs/ppeda_shitu.yaml
 ```
 
 <a name="22"></a>

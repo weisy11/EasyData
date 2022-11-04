@@ -100,8 +100,8 @@ DataGen:
     - tia_perspective
   data_dir: "demo/clas_data" # 原始训练数据目录
   label_file: "demo/clas_data/train_list.txt" # 原始数据训练标签
-  aug_file: "labels/test.txt" # 新生成的数据标签
-  out_dir: "test" # 新生成的数据存储目录
+  gen_label: "labels/test.txt" # 新生成的数据标签
+  img_save_folder: "test" # 新生成的数据存储目录
   gen_ratio: 0 # 选择一定比例的原始数据进行生成
   gen_num: 5 # 指定每类增强生成的数量
   size: 224 # 图像resize的尺寸
@@ -117,7 +117,7 @@ IndexProcess:
   index_method: "HNSW32" # supported: HNSW32, IVF, Flat
   image_root: "./test" # 新生成的数据存储目录
   index_dir: "./augdata/all_aug" # 构建索引库的存储目录
-  data_file:  "./labels/test.txt" # 新生成的数据标签
+  all_label_file:  *gen_label # 新生成的数据标签, 与DataGen输出标签路径一致
   index_operation: "new" # suported: "append", "remove", "new"
   delimiter: " " # 标签分隔符
   dist_type: "IP"
