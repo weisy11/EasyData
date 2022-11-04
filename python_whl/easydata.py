@@ -66,8 +66,13 @@ def init_pipeline_config(**cfg):
         env_config["print_res"] = cfg["print_res"]
     if "return_res" in cfg and cfg["return_res"] is not None:
         env_config["return_res"] = cfg["return_res"]
-    opt_config = {"ENV": env_config}
 
+    # MODEL config
+    model_config = {}
+    if "threshold" in cfg and cfg["threshold"]:
+        model_config = {**model_config, **{"0": {"ClassificationOp": {"PostProcess": {"0": {"ThreshOutput": {"threshold": cfg["threshold"]}}}}}}}
+
+    opt_config = {"MODEL": model_config, "ENV": env_config}
     FLAGS = argparse.Namespace(**{"config": base_cfg_path, "opt": opt_config})
     return FLAGS
 
@@ -106,7 +111,14 @@ def parse_args():
         default=None,
         help=
         "Path of input, suport image file, image directory and video file.",
-        required=False)
+        required=False
+    )
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=0,
+        required=False
+    )
 
     # PPEDA args
     parser.add_argument("--gen_mode", type=str, default="aug")
@@ -205,7 +217,7 @@ class EasyData(object):
 def main():
     args = parse_args()
     easydata = EasyData(**(args.__dict__))
-    easydata.predict()
+    easydata.predict(args.input)
 
 
 if __name__ == "__main__":
