@@ -138,7 +138,36 @@ BigModel:
 
 如果需要适配自己的数据集，可以更改`DataGen`字段参数，主要涉及`data_dir`，`label_file`这两个参数，分别对应原始数据集目录和原始数据集标签路径。
 
-最终生成的有效数据路径在`DataGen.out_dir`字段下，也即默认的`test`目录，对应的数据标签为`BigModel.final_label`字段，也即默认的 `high_socre_label.txt`文件。之后便可将该增广后的有效数据和原始数据进行合并一起训练。
+最终生成的有效数据路径在`DataGen.out_dir`字段下，也即默认的`test`目录，对应的数据标签为`BigModel.final_label`字段，也即默认的 `high_socre_label.txt`文件。
+
+增广后的数据和标签示例如下：
+
+图像：
+
+![eda_example](../../images/aug/eda_example.png)
+
+有效数据标签：
+```
+./test/randaugment/2_n01682714_8438.JPEG 4
+./test/randaugment/3_n01530575_10039.JPEG 1
+./test/randaugment/4_n01601694_4224.JPEG 2
+./test/randaugment/5_n01641577_14447.JPEG 3
+./test/random_erasing/1_n01440764_15008.JPEG 0
+./test/random_erasing/2_n01530575_10039.JPEG 1
+./test/random_erasing/3_n01601694_4224.JPEG 2
+./test/random_erasing/4_n01698640_9242.JPEG 5
+./test/random_erasing/5_n01641577_14447.JPEG 3
+./test/gridmask/1_n01698640_9242.JPEG 5
+./test/gridmask/3_n01440764_15008.JPEG 0
+./test/gridmask/4_n01601694_4224.JPEG 2
+./test/tia_distort/1_n01682714_8438.JPEG 4
+./test/tia_distort/2_n01601694_4224.JPEG 2
+./test/tia_distort/3_n01641577_14447.JPEG 3
+./test/tia_stretch/3_n01698640_9242.JPEG 5
+./test/tia_perspective/2_n01440764_15008.JPEG 0
+./test/tia_perspective/4_n01530575_10039.JPEG 1
+./test/tia_perspective/5_n01641577_14447.JPEG 3
+```
 
 如需使用其他场景，更换对应的配置文件即可，不同场景对应配置文件如下：
 
@@ -149,39 +178,41 @@ BigModel:
 | 图像识别 |[ppeda_shitu.yaml](../../../deploy/configs/ppeda_shitu.yaml)|
 
 
-## 5. EDA实验效果
-为了验证 EDA 离线增广数据的效果，我们在不同的场景下进行分别验证，包含图像分类、文本识别、整图方向分类、二维码审核等场景，为了消除数据量变化带来的影响，我们会将原始数据进行复制多份作为baseline，具体实验结果如下表：
+## 5 如何使用增广数据
 
-| 实验任务 | baseline | 增广后 |数据量对比|
-| :--: | :--: | :------: | :------: |
-|  文本识别    |   72.95%   |   74.15% (+1.20%)  | baseline：原始数据量复制6倍，增广后：约为原始数据量的2倍 | 
-|  图像分类（PPLCNet）    |   80.10%   |   84.47% (+4.37%)  | baseline：原始数据量复制2倍，增广后：约为原始数据量的2倍 |
-|  图像分类（PPHGNet）    |   90.80%   |   91.33% (+0.53%)  | baseline：原始数据量复制2倍，增广后：约为原始数据量的2倍 | 
-|  识图任务    |   66.80%   |   67.70% (+0.90%)  | baseline：原始数据量复制6倍，增广后：约为原始数据量的2倍 |
-|  整图方向分类 |   89.90%   |   90.12% (+0.22%)  | baseline：原始数据量复制2倍，增广后：约为原始数据量的1.6倍 | 
-|  二维码审核   |   95.29%   |   95.73% (+0.44%)  | baseline：原始数据量复制6倍，增广后：约为原始数据量的2.5倍 | 
-
-可以看出，使用 EDA 工具对数据进行增广后在不同场景中都有不同程度的效果提升。
-
-### 5.1 实验任务说明
+完成EDA数据增广后，我们便可以在自己的任务上优化模型指标。我们基于以下多个任务进行实验验证，下面分别介绍这些任务：
 
 **文本识别**
 
-文本识别任务是OCR的一个子任务，主要负责识别文本行的内容。我们基于[PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR/tree/release/2.6)中的[PP-OCRv3中文识别模型](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/configs/rec/PP-OCRv3/ch_PP-OCRv3_rec.yml)配置进行验证，数据集采用中英文数据集，约26W。在使用EDA进行扩充数据后，便可将该增广后的有效数据和原始数据进行合并一起训练，具体训练步骤可参考[文本识别训练](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/doc/doc_ch/recognition.md)。由于数据量较大，我们缩减了训练轮数到200epoch。
+文本识别任务是OCR的一个子任务，主要负责识别文本行的内容。我们基于[PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR/tree/release/2.6)中的[PP-OCRv3中文识别模型](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/configs/rec/PP-OCRv3/ch_PP-OCRv3_rec.yml)配置进行验证，数据集采用中英文数据集，约26W。在使用EDA进行扩充数据后，便可将该增广后的有效数据和原始数据进行合并一起训练，具体训练步骤可参考[文本识别训练](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/doc/doc_ch/recognition.md#2-%E5%BC%80%E5%A7%8B%E8%AE%AD%E7%BB%83)。
 
 **图像分类**
 
-图像分类任务是计算机视觉中最基本的任务，主要对图像进行类别分类。我们基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PPLCNet分类模型](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/ImageNet/PPLCNet/PPLCNet_x1_0.yaml)配置进行验证，数据集采用ImageNet的子集，共计5W。在使用EDA进行扩充数据后，便可将该增广后的有效数据和原始数据进行合并一起训练，具体训练步骤可参考[图像分类训练](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/training/single_label_classification/training.md)。
+图像分类任务是计算机视觉中最基本的任务，主要对图像进行类别分类。我们基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PPLCNet分类模型](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/ImageNet/PPLCNet/PPLCNet_x1_0.yaml)配置进行验证，数据集采用ImageNet1K的子集，共计5W。在使用EDA进行扩充数据后，便可将该增广后的有效数据和原始数据进行合并一起训练，具体训练步骤可参考[图像分类训练](https://github.com/PaddlePaddle/PaddleClas/blob/develop/docs/zh_CN/training/single_label_classification/training.md#311-%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83)。
 
 **识图任务**
 
-识图任务是基于[PP-ShiTu系统](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/models/PP-ShiTu/README.md#pp-shitu-v2%E5%9B%BE%E5%83%8F%E8%AF%86%E5%88%AB%E7%B3%BB%E7%BB%9F)，它是一个实用轻量级通用图像识别系统，包含主体检测、特征提取、向量检索三个步骤。该任务我们主要进行特征提取阶段的模型训练，基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PPLCNetV2识别模型](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/GeneralRecognitionV2/GeneralRecognitionV2_PPLCNetV2_base.yaml)配置进行验证，数据集约10W。在使用EDA进行扩充数据后，便可将该增广后的有效数据和原始数据进行合并一起训练，具体训练步骤参考[特征提取训练](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/training/PP-ShiTu/feature_extraction.md)。
+识图任务是基于[PP-ShiTu系统](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/models/PP-ShiTu/README.md#pp-shitu-v2%E5%9B%BE%E5%83%8F%E8%AF%86%E5%88%AB%E7%B3%BB%E7%BB%9F)，它是一个实用轻量级通用图像识别系统，包含主体检测、特征提取、向量检索三个步骤。该任务我们主要进行特征提取阶段的模型训练，基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PPLCNetV2识别模型](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/GeneralRecognitionV2/GeneralRecognitionV2_PPLCNetV2_base.yaml)配置进行验证，数据集约10W。在使用EDA进行扩充数据后，便可将该增广后的有效数据和原始数据进行合并一起训练，具体训练步骤参考[特征提取训练](https://github.com/PaddlePaddle/PaddleClas/blob/develop/docs/zh_CN/training/PP-ShiTu/feature_extraction.md#52-%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83)。
 
 **整图方向分类**
 
 该任务是实用轻量图像分类解决方案（PULC, Practical Ultra Lightweight Classification）的一个应用场景，主要是对一张图像的方向进行分类，我们
-基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PULC整图方向分类模型](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/image_orientation/PPLCNet_x1_0.yaml)配置进行验证，数据集采用ImageNet1k数据和部分标注的文本数据，约136.5W。在使用EDA进行扩充数据后，便可将该增广后的有效数据和原始数据进行合并一起训练，具体训练步骤参考[图像方向分类训练]()@崔程。由于数据量较大，我们缩减了训练轮数为20epoch。
+基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PULC整图方向分类模型](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/image_orientation/PPLCNet_x1_0.yaml)配置进行验证，数据集采用ImageNet1k数据和部分标注的文本数据，约136.5W。在使用EDA进行扩充数据后，便可将该增广后的有效数据和原始数据进行合并一起训练，具体训练步骤参考[图像方向分类训练]()@崔程。
 
 **二维码审核**
 
 该任务也是实用轻量图像分类解决方案（PULC, Practical Ultra Lightweight Classification）的一个应用场景，主要是对一张图像中是否含有二维码、条形码等进行分类，我们基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PULC二维码审核模型](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/code_exists/PPLCNet_x1_0.yaml)配置进行验证，数据集，约4W。在使用EDA进行扩充数据后，便可将该增广后的有效数据和原始数据进行合并一起训练，具体训练步骤参考[二维码审核训练]()@崔程
+
+## 5.1 EDA实验效果
+为了验证 EDA 离线增广数据的效果，我们在上述不同的场景下进行分别验证，包含文本识别、图像分类、识图任务、整图方向分类、二维码审核场景。为了消除数据量变化带来的影响，我们保证增广后的数据量和baseline数据量相同，也即会将原始数据进行复制作为baseline，具体实验结果如下表：
+
+| 实验任务 | baseline | 增广后 |
+| :--: | :--: | :------: |
+|  文本识别    |   72.95%   |   74.15% (+1.20%)  | 
+|  图像分类（PPLCNet）    |   80.10%   |   84.47% (+4.37%)  |
+|  图像分类（PPHGNet）    |   90.80%   |   91.33% (+0.53%)  |
+|  识图任务    |   66.80%   |   67.70% (+0.90%)  |
+|  整图方向分类 |   89.90%   |   90.12% (+0.22%)  |
+|  二维码审核   |   95.29%   |   95.73% (+0.44%)  |
+
+可以看出，使用 EDA 工具对数据进行增广后在不同场景中都有不同程度的效果提升。
