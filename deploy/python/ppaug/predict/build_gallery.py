@@ -18,10 +18,8 @@ import numpy as np
 from tqdm import tqdm
 import pickle
 
-from python.ppaug.predict.predict_rec import RecPredictor
-
-from utils import logger
-from utils import config
+from python.ppaug.utils import logger
+from python.ppaug.utils import config
 
 
 def split_datafile(data_file, image_root, delimiter="\t"):
@@ -61,7 +59,7 @@ class GalleryBuilder(object):
         '''
         operation_method = config.get("index_operation", "new").lower()
 
-        gallery_images, gallery_docs = split_datafile(config['data_file'],
+        gallery_images, gallery_docs = split_datafile(config['all_label_file'],
                                                       config['image_root'],
                                                       config['delimiter'])
 
