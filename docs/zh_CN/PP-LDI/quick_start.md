@@ -132,14 +132,14 @@ easydata --model clarity_assessment --input ./clarity_assessment/ --device cpu
 上述命令的预测结果如下所示：
 
 ```text
-{'filename': '/paddle/data/easydata_demo_imgs/clarity_assessment/clarity_demo.jpg', 'class_ids': [1], 'scores': [0.90597], 'label_names': ['clarity']}
-{'filename': '/paddle/data/easydata_demo_imgs/clarity_assessment/blured_demo.jpg', 'class_ids': [1], 'scores': [0.58703], 'label_names': ['clarity']}
+{'filename': '/paddle/data/easydata_demo_imgs/clarity_assessment/clarity_demo.jpg', 'class_ids': [0], 'scores': [0.89864], 'label_names': ['clarity']}
+{'filename': '/paddle/data/easydata_demo_imgs/clarity_assessment/blured_demo.jpg', 'class_ids': [1], 'scores': [0.97749], 'label_names': ['blured']}
 ```
 
 预测结果中，类别 id 与分类标签的映射关系如下：
 
-* 0: blured，表示该图像为模糊图像；
-* 1: clarity，表示该图像为清晰图像。
+* 0: clarity，表示该图像为清晰图像；
+* 1: blured，表示该图像为模糊图像。
 
 <a name="213"></a>
 
