@@ -212,8 +212,8 @@ class PPEDA(PPAug):
         self.feature_thresh = args.repeat_ratio
         self.config["FeatureExtract"]["thresh"] = args.repeat_ratio
         
-        if not os.path.exists(os.path.dirname(args.gen_label)):
-            os.makedirs(os.path.dirname(args.gen_label))
+        self.check_dir(args.gen_label)
+        self.check_dir(args.compare_out)
 
         if not os.path.exists("tmp"):
             os.makedirs("tmp")
