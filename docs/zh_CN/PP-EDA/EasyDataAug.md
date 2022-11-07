@@ -184,7 +184,7 @@ BigModel:
 
 **广告码图像过滤**
 
-该任务也是实用轻量图像分类解决方案（PULC, Practical Ultra Lightweight Classification）的一个应用场景，主要是对一张图像中是否含有二维码、条形码等进行分类，基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PULC广告码图像过滤模型](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/code_exists/PPLCNet_x1_0.yaml)配置进行验证，数据集，约4W。在使用PP-EDA进行扩充数据后，将增广数据与原始数据以1:1的比例混合，送入模型迭代训练。具体训练步骤参考[广告码图像过滤训练]()@崔程
+该任务也是实用轻量图像分类解决方案（PULC, Practical Ultra Lightweight Classification）的一个应用场景，主要是对一张图像中是否含有二维码、条形码等进行分类，基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PULC广告码图像过滤模型](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/code_exists/PPLCNet_x1_0.yaml)配置进行验证，数据集，约4W。在使用PP-EDA进行扩充数据后，将增广数据与原始数据以1:1的比例混合，送入模型迭代训练。具体训练步骤参考[广告码图像过滤训练](https://github.com/PaddlePaddle/PaddleClas/blob/develop/docs/zh_CN/models/PULC/PULC_code_exists.md)
 
 ## 5.1 PP-EDA实验效果
 为了验证 PP-EDA 离线增广数据的效果，在上述不同的场景下进行分别验证，包含文本识别、图像分类、识图任务、整图方向分类、广告码图像过滤场景。为了消除数据量变化带来的影响，保证增广后的数据量和baseline数据量相同，会将原始数据进行复制作为baseline，具体实验结果如下表：
