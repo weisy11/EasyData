@@ -201,7 +201,9 @@ class PPEDA(PPAug):
         self.config["DataGen"]["data_dir"] = args.ori_data_dir
         self.config["DataGen"]["label_file"] = args.label_file
         self.config["DataGen"]["gen_label"] = args.gen_label
+        self.config["IndexProcess"]["all_label_file"] = args.gen_label
         self.config["DataGen"]["img_save_folder"] = args.out_dir
+        self.config["IndexProcess"]["image_root"] = args.out_dir
         self.config["DataGen"]["gen_ratio"] = args.gen_ratio
         self.config["DataGen"]["gen_num"] = args.gen_num
         self.config["DataGen"]["size"] = args.size
