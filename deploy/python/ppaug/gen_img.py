@@ -5,7 +5,9 @@ import argparse
 import random
 from random import sample
 from tqdm import tqdm
+import traceback
 
+from python.ppaug.utils import logger
 from .data.preprocess import transform
 from .data.preprocess.ops.operators import DecodeImage, ResizeImage
 from .data.preprocess.ops.randaugment import RandAugment
@@ -37,6 +39,8 @@ def parse_args():
 
 def get_image_file_list(img_file):
     imgs_lists = []
+    if not os.path.exists(img_file):
+        raise Exception("{} does not exist!".format(img_file))
     with open(img_file, "r") as file:
         for data_line in file.readlines():
             imgs_lists.append(data_line)
@@ -57,7 +61,9 @@ class GenAug(object):
         if type(self.size) is int:
             size = (self.size, self.size)
         else:
-            assert len(self.size) == 2, "size shape must be 2, but got {}".format(len(self.size))
+            assert len(
+                self.size) == 2, "size shape must be 2, but got {}".format(
+                    len(self.size))
             size = self.size
         resize_op = ResizeImage(size)
         if self.ops == "randaugment":
@@ -72,11 +78,11 @@ class GenAug(object):
                 aug_op = GridMaskOCR(prob=1.0)
             else:
                 aug_op = GridMask(d1=96,
-                                d2=self.size,
-                                rotate=1,
-                                ratio=0.6,
-                                mode=1,
-                                prob=0.8)
+                                  d2=self.size,
+                                  rotate=1,
+                                  ratio=0.6,
+                                  mode=1,
+                                  prob=0.8)
 
         if self.ops in ["randaugment", "random_erasing", "gridmask"]:
             self.all_op = [decode_op, resize_op, aug_op]
@@ -89,15 +95,16 @@ class GenAug(object):
         self.img_list = get_image_file_list(config["label_file"])
 
         self.imgs_dir = config["data_dir"]
-        if not os.path.exists(config["out_dir"] + "/" + self.ops):
-            os.makedirs(config["out_dir"] + "/" + self.ops)
 
-        out_label_dir = os.path.dirname(config["aug_file"])
+        if not os.path.exists(config["img_save_folder"] + "/" + self.ops):
+            os.makedirs(config["img_save_folder"] + "/" + self.ops)
+
+        out_label_dir = os.path.dirname(config["gen_label"])
         if not os.path.exists(out_label_dir):
             os.makedirs(out_label_dir)
         self.all_num = 0
-        self.output_file = config["aug_file"]
-        self.out_dir = config["out_dir"]
+        self.output_file = config["gen_label"]
+        self.out_dir = config["img_save_folder"]
 
     def __call__(self, gen_num=5, gen_ratio=0, trans_label=None):
         if gen_ratio > 0:
@@ -118,6 +125,9 @@ class GenAug(object):
             self.all_num += 1
             try:
                 file_name, label = line.split(self.delimiter)
+                img_path = os.path.join(self.imgs_dir, file_name)
+                if not os.path.exists(img_path):
+                    raise Exception("{} does not exist!".format(img_path))
                 label = label.strip("\n")
                 with open(os.path.join(self.imgs_dir, file_name), 'rb') as f:
                     data = f.read()
@@ -133,11 +143,12 @@ class GenAug(object):
                     "{}/{}/{}_{}".format(self.out_dir, self.ops, self.all_num,
                                          img_name_pure), np.array(data))
                 trans_label.write("{}/{}_{}{}{}\n".format(
-                    self.ops, self.all_num, img_name_pure, self.delimiter , label))
-                # print("{}/{}/{}_{} {}".format(self.out_dir, self.ops, self.all_num, img_name_pure, label))
-            except Exception as E:
-                print(E)
-                print("error:", line)
+                    self.ops, self.all_num, img_name_pure, self.delimiter,
+                    label))
+            except:
+                logger.error(
+                    "error in generat aug image:{}, err msg: {}".format(
+                        line, traceback.format_exc()))
         return self.output_file
 
 

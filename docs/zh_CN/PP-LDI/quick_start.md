@@ -41,8 +41,31 @@
 <a name="12"></a>
 ### 1.2 安装 EasyData whl 包
 
+您可以从 PyPi 安装我们最新的发布版本，也可以获取 EasyData 项目代码本地安装。
+
+<a name="121"></a>
+### 1.2.1 PyPi
+
+直接通过 pip 工具从 PyPi 等源进行安装，命令如下：
+
 ```bash
 pip install easydata
+```
+
+<a name="122"></a>
+### 1.2.2 本地安装
+
+本地安装需要先获取 EasyData 项目代码，命令如下：
+
+```bash
+git clone https://github.com/Paddle/EasyData.git
+```
+
+然后进入 EasyData 项目根目录并安装，命令如下：
+
+```bash
+cd EasyData
+python setup.py install
 ```
 
 <a name="2"></a>
@@ -50,11 +73,10 @@ pip install easydata
 <a name="21"></a>
 ### 2.1 命令行使用
 
-<!-- TODO(gaotingquan) -->
-EasyData 提供了测试图片用于验证，点击[这里]()下载并解压，然后在终端中切换到相应目录：
+EasyData 提供了测试图片用于验证，点击[这里](https://paddleclas.bj.bcebos.com/data/PULC/easydata_demo_imgs.tar)下载并解压，然后在终端中切换到相应目录：
 
 ```
-cd path_to_demo_imgs
+cd ./easydata_demo_imgs/
 ```
 
 如果不使用提供的测试图片，可以将下方`--input`参数替换为相应的测试图片路径。
@@ -63,17 +85,16 @@ cd path_to_demo_imgs
 
 #### 2.1.1 图像方向矫正模型
 
-EasyData 提供了图像方向矫正模型，通过下方代码即可快速体验，其中参数 `--model image_orientation` 指定了所使用的模型；参数 `--input ./imgs/11.jpg` 指定了待预测图像文件路径；参数 `--device cpu` 指定了使用 CPU 进行预测，同样可以通过 `--device gpu` 指定使用 GPU 进行预测。
+EasyData 提供了图像方向矫正模型，通过下方代码即可快速体验，其中参数 `--model image_orientation` 指定了所使用的模型；参数 `--input ./image_orientation/1.jpg` 指定了待预测图像文件路径；参数 `--device cpu` 指定了使用 CPU 进行预测，同样可以通过 `--device gpu` 指定使用 GPU 进行预测。
 
 ```bash
-easydata --model image_orientation --input ./imgs/11.jpg --device cpu
+easydata --model image_orientation --input ./image_orientation/1.jpg --device cpu
 ```
 
 预测结果以 dict 格式输出，预测结果包含了预测图像文件路径、分类结果、score 和分类结果对应的标签：
 
 ```bash
-{'filename': './imgs/11.jpg', 'class_ids': [0], 'scores': [0.92339], 'label_names': ['0°']}
-......
+{'filename': '/paddle/data/easydata_demo_imgs/image_orientation/1.jpg', 'class_ids': 1, 'scores': 0.9346007, 'label_names': '90°'}
 ```
 
 预测结果中，类别 id 与分类标签的映射关系如下：
@@ -86,16 +107,16 @@ easydata --model image_orientation --input ./imgs/11.jpg --device cpu
 另外，EasyData 同样支持对多张图像进行预测，仅需通过参数 `--input` 指定包含预测图像的目录即可：
 
 ```bash
-easydata --model image_orientation --input ./imgs/ --device cpu
+easydata --model image_orientation --input ./image_orientation/ --device cpu
 ```
 
 此时，会将每个图像的预测结果依次打印：
 
 ```bash
-{'filename': './imgs/1.jpg', 'class_ids': [0], 'scores': [0.90009], 'label_names': ['0°']}
-{'filename': './imgs/2.jpg', 'class_ids': [1], 'scores': [0.92339], 'label_names': ['90°']}
-{'filename': './imgs/3.jpg', 'class_ids': [3], 'scores': [0.92084], 'label_names': ['270°']}
-{'filename': './imgs/4.jpg', 'class_ids': [2], 'scores': [0.72283], 'label_names': ['180°']}
+{'filename': '/paddle/data/easydata_demo_imgs/image_orientation/2.jpg', 'class_ids': 2, 'scores': 0.9217471, 'label_names': '180°'}
+{'filename': '/paddle/data/easydata_demo_imgs/image_orientation/3.jpg', 'class_ids': 3, 'scores': 0.9218502, 'label_names': '270°'}
+{'filename': '/paddle/data/easydata_demo_imgs/image_orientation/1.jpg', 'class_ids': 1, 'scores': 0.9346007, 'label_names': '90°'}
+{'filename': '/paddle/data/easydata_demo_imgs/image_orientation/0.jpg', 'class_ids': 0, 'scores': 0.9267141, 'label_names': '0°'}
 ```
 
 <a name="212"></a>
@@ -105,22 +126,20 @@ easydata --model image_orientation --input ./imgs/ --device cpu
 EasyData 提供了模糊图像过滤模型，通过下方代码即可快速体验：
 
 ``` bash
-easydata --model clarity_assessment --input ./imgs/ --device cpu
+easydata --model clarity_assessment --input ./clarity_assessment/ --device cpu
 ```
 
 上述命令的预测结果如下所示：
 
 ```text
-{'filename': './imgs/1.jpg', 'class_ids': [1], 'scores': [0.91111], 'label_names': ['clarity']}
-{'filename': './imgs/2.jpg', 'class_ids': [1], 'scores': [0.96695], 'label_names': ['clarity']}
-{'filename': './imgs/3.jpg', 'class_ids': [1], 'scores': [0.53158], 'label_names': ['clarity']}
-{'filename': './imgs/4.jpg', 'class_ids': [0], 'scores': [0.67757], 'label_names': ['blured']}
+{'filename': '/paddle/data/easydata_demo_imgs/clarity_assessment/clarity_demo.jpg', 'class_ids': [0], 'scores': [0.89864], 'label_names': ['clarity']}
+{'filename': '/paddle/data/easydata_demo_imgs/clarity_assessment/blured_demo.jpg', 'class_ids': [1], 'scores': [0.97749], 'label_names': ['blured']}
 ```
 
 预测结果中，类别 id 与分类标签的映射关系如下：
 
-* 0: blured，表示该图像为模糊图像；
-* 1: clarity，表示该图像为清晰图像。
+* 0: clarity，表示该图像为清晰图像；
+* 1: blured，表示该图像为模糊图像。
 
 <a name="213"></a>
 
@@ -129,16 +148,14 @@ easydata --model clarity_assessment --input ./imgs/ --device cpu
 EasyData 提供了广告码图像过滤模型，支持识别图像中是否包含条形码、二维码、微信小程序码，通过下方代码即可快速体验：
 
 ``` bash
-easydata --model code_exists --input ./imgs/ --device cpu
+easydata --model code_exists --input ./code_exists/ --device cpu
 ```
 
 上述命令的预测结果如下所示：
 
 ```text
-{'filename': './imgs/1.jpg', 'class_ids': [0], 'scores': [0.93238], 'label_names': ['no code']}
-{'filename': './imgs/2.jpg', 'class_ids': [0], 'scores': [0.96319], 'label_names': ['no code']}
-{'filename': './imgs/3.jpg', 'class_ids': [0], 'scores': [0.70159], 'label_names': ['no code']}
-{'filename': './imgs/4.jpg', 'class_ids': [1], 'scores': [0.99967], 'label_names': ['contains code']}
+{'filename': '/paddle/data/easydata_demo_imgs/code_exists/no_code_demo.jpg', 'class_ids': [0], 'scores': [0.996], 'label_names': ['no code']}
+{'filename': '/paddle/data/easydata_demo_imgs/code_exists/contains_code_demo.jpg', 'class_ids': [1], 'scores': [1.0], 'label_names': ['contains code']}
 ```
 
 预测结果中，类别 id 与分类标签的映射关系如下：
@@ -154,15 +171,15 @@ EasyData 同样可以通过 whl 包的形式集成到 Python 脚本中。在 Pyt
 
 ```python
 from easydata import EasyData
-model = EasyData(model="image_orientation", device="cpu", return_res=True)
-results = model.predict("./imgs/")
+model = EasyData(model="image_orientation", device="cpu", return_res=True, print_res=False)
+results = model.predict("./image_orientation/")
 print(results)
 ```
 
 结果是一个list，其中元素为 dict 类型，包含了预测图像文件路径、预测结果id、score 和预测类别名：
 
 ```bash
-[{'filename': './imgs/1.jpg', 'class_ids': [0], 'scores': [0.72283], 'label_names': ['0°']}, {'filename': './imgs/2.jpg', 'class_ids': [0], 'scores': [0.92084], 'label_names': ['0°']}, {'filename': './imgs/3.jpeg', 'class_ids': [0], 'scores': [0.92339], 'label_names': ['0°']}, {'filename': './imgs/4.jpg', 'class_ids': [0], 'scores': [0.90009], 'label_names': ['0°']}]
+[{'filename': '/paddle/data/easydata_demo_imgs/image_orientation/2.jpg', 'class_ids': 2, 'scores': 0.92174697, 'label_names': '180°'}, {'filename': '/paddle/data/easydata_demo_imgs/image_orientation/3.jpg', 'class_ids': 3, 'scores': 0.9218502, 'label_names': '270°'}, {'filename': '/paddle/data/easydata_demo_imgs/image_orientation/1.jpg', 'class_ids': 1, 'scores': 0.93460053, 'label_names': '90°'}, {'filename': '/paddle/data/easydata_demo_imgs/image_orientation/0.jpg', 'class_ids': 0, 'scores': 0.92671424, 'label_names': '0°'}]
 ```
 
 如上例所示，在实例化 EasyData 对象时，相关参数说明如下：

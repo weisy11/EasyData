@@ -21,12 +21,28 @@ sys.path.insert(0, os.path.abspath(os.path.join(parent, './deploy/')))
 import argparse
 
 from ppcv.engine.pipeline import Pipeline
+from utils.utils import load_yaml
 from python.ppaug import PPAug
 from python.ppaug.utils import config
 
 __all__ = ['EasyData']
 
 VERSION = '0.5.0.1'
+
+
+class LoopDict(dict):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    
+    def loop_set(self, key_list, value):
+        # for key in key_list:
+        key = key_list[0]
+        if key not in self:
+            self[key] = LoopDict()
+        if len(key_list) == 1:
+            self[key] = value
+        else:
+            self[key].loop_set(key_list[1:], value)
 
 
 def argsparser():
@@ -53,7 +69,8 @@ def init_pipeline_config(**cfg):
     base_cfg_path = f"./deploy/configs/ppcv/{model_name}.yaml"
     __dir__ = os.path.dirname(__file__)
     base_cfg_path = os.path.join(__dir__, base_cfg_path)
-
+    base_cfg = load_yaml(base_cfg_path)
+                 
     # ENV config
     env_config = {}
     if "output_dir" in cfg and cfg["output_dir"]:
@@ -66,13 +83,31 @@ def init_pipeline_config(**cfg):
         env_config["print_res"] = cfg["print_res"]
     if "return_res" in cfg and cfg["return_res"] is not None:
         env_config["return_res"] = cfg["return_res"]
-    opt_config = {"ENV": env_config}
 
+    # MODEL config
+    model_config = LoopDict()
+    # replace path of class_id_map_file by absolute path
+    for model_cfg in base_cfg["MODEL"]:
+        op_name = list(model_cfg.keys())[0]
+        if op_name == "ClassificationOp":
+            postprocess_ops = model_cfg[op_name].get("PostProcess", [])
+            for postprocess_op in postprocess_ops:
+                postprocess_op_name = list(postprocess_op.keys())[0]
+                if postprocess_op_name in ["ThreshOutput", "Topk"]:
+                    class_id_map_file_path = postprocess_op[postprocess_op_name].get("class_id_map_file", None)
+                    if class_id_map_file_path is not None:
+                        class_id_map_file_path = os.path.join(__dir__, class_id_map_file_path)
+                        model_config.loop_set(["0", "ClassificationOp", "PostProcess", "0", postprocess_op_name, "class_id_map_file"], class_id_map_file_path)
+    if "threshold" in cfg and cfg["threshold"]:
+        model_config.loop_set(["0", "ClassificationOp", "PostProcess", "0", "ThreshOutput", "threshold"], cfg["threshold"])
+
+    opt_config = {"MODEL": model_config, "ENV": env_config}
     FLAGS = argparse.Namespace(**{"config": base_cfg_path, "opt": opt_config})
     return FLAGS
 
 
 def parse_args():
+
     def str2bool(v):
         return v.lower() in ("true", "t", "1")
 
@@ -96,11 +131,7 @@ def parse_args():
         help=
         "Choose the device you want to run, it can be: CPU/GPU/XPU, default is CPU."
     )
-    parser.add_argument(
-        "--print_res",
-        type=str2bool,
-        default=True
-    )
+    parser.add_argument("--print_res", type=str2bool, default=True)
 
     # PPLDI args
     parser.add_argument(
@@ -111,8 +142,15 @@ def parse_args():
         "Path of input, suport image file, image directory and video file.",
         required=False
     )
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=0,
+        required=False
+    )
 
     # PPEDA args
+    parser.add_argument("--gen_mode", type=str, default="aug")
     parser.add_argument("--gen_num", type=int, default=10)
     parser.add_argument("--gen_ratio", type=float, default=0)
     parser.add_argument("--ops",
@@ -123,10 +161,13 @@ def parse_args():
                         ])
     parser.add_argument("--ori_data_dir",
                         type=str,
-                        default=None,
+                        default="demo/clas_data",
                         required=False)
-    parser.add_argument("--label_file", type=str, default=None, required=False)
-    parser.add_argument("--aug_file", type=str, default="labels/test.txt")
+    parser.add_argument("--label_file",
+                        type=str,
+                        default="demo/clas_data/train_list.txt",
+                        required=False)
+    parser.add_argument("--gen_label", type=str, default="labels/test.txt")
     parser.add_argument("--out_dir", type=str, default="test")
     parser.add_argument("--size", type=int, default=224)
     parser.add_argument("--repeat_ratio", type=float, default=0.9)
@@ -137,11 +178,14 @@ def parse_args():
                         type=str,
                         default="high_socre_label.txt")
     parser.add_argument("--model_type", type=str, default="cls")
-    parser.add_argument("--model_config", type=str, default="deploy/configs/ppeda_clas.yaml")
+    parser.add_argument("--model_config",
+                        type=str,
+                        default="deploy/configs/ppeda_clas.yaml")
     return parser.parse_args()
 
 
 class PPEDA(PPAug):
+
     def __init__(self, **kwargs):
         args = parse_args()
         args.__dict__.update(**kwargs)
@@ -150,19 +194,18 @@ class PPEDA(PPAug):
         self.config = config.get_config(model_config, show=False)
         self.gen_num = args.gen_num
         self.gen_ratio = args.gen_ratio
-        self.ori_label = args.label_file
-        self.aug_file = args.aug_file
-        self.check_dir(self.aug_file)
-        self.aug_type = args.ops
         self.delimiter = self.config["DataGen"].get('delimiter', ' ')
+        self.gen_label = args.gen_label
+        self.gen_mode = args.gen_mode
+
         self.config["DataGen"]["data_dir"] = args.ori_data_dir
         self.config["DataGen"]["label_file"] = args.label_file
-        self.config["DataGen"]["aug_file"] = args.aug_file
-        self.config["DataGen"]["out_dir"] = args.out_dir
+        self.config["DataGen"]["gen_label"] = args.gen_label
+        self.config["DataGen"]["img_save_folder"] = args.out_dir
         self.config["DataGen"]["gen_ratio"] = args.gen_ratio
         self.config["DataGen"]["gen_num"] = args.gen_num
         self.config["DataGen"]["size"] = args.size
-        self.config["DataGen"]["model_type"] = args.model_type
+        self.aug_type = args.ops
         self.compare_out = args.compare_out
         self.feature_thresh = args.repeat_ratio
         self.config["FeatureExtract"]["thresh"] = args.repeat_ratio
@@ -183,6 +226,7 @@ class PPEDA(PPAug):
 
 
 class EasyData(object):
+
     def __init__(self, **cfg):
         self.model = cfg['model']
         if self.model == "ppeda":
@@ -202,7 +246,7 @@ class EasyData(object):
 def main():
     args = parse_args()
     easydata = EasyData(**(args.__dict__))
-    easydata.predict()
+    easydata.predict(args.input)
 
 
 if __name__ == "__main__":
