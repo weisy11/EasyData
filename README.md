@@ -22,7 +22,7 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
 
 - **🔥2022.11 发布 EasyData beta/0.5**
   - 发布数据质量提升工具，包括图像方向矫正、低质图像过滤能力，使用该工具可以在多个视觉任务中提升效果。
-  - 发布数据合成工具@晓婷
+  - 发布数据合成工具，支持增广数据生成、重复和低质数据过滤，使用该工具可以在整图识别场景中提升效果。
   - 发布开源数据集和标注工具大全@赵军
 
 
@@ -30,7 +30,7 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
 ## ⚡ 快速开始
 
 - [数据质量提升快速体验](docs/zh_CN/PP-LDI/quick_start.md)
-- 数据合成工具快速体验@晓婷
+- [数据合成工具快速体验](docs/zh_CN/ppaug/quick_start.md)
 - 开源数据集和标注工具大全@赵军
 
 ## 👫 开源社区
@@ -67,7 +67,7 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
     - [图像方向校正工具](docs/zh_CN/PP-LDI/image_orientation_correction.md)
     - [模糊图像过滤工具](docs/zh_CN/PP-LDI/blured_quality_image_filtering.md)
     - [广告码图像过滤工具](docs/zh_CN/PP-LDI/code_image_filtering.md)
-- EasyDataAugment 数据扩充方案 @晓婷
+- EasyDataAugment 数据扩充方案
   - [快速体验](docs/zh_CN/ppaug/quick_start.md)
   - [流程详解](docs/zh_CN/ppaug/EasyDataAug.md)
 - 开源数据集大全@赵军
