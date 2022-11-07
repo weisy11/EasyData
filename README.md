@@ -30,7 +30,7 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
 ## ⚡ 快速开始
 
 - [数据质量提升快速体验](docs/zh_CN/PP-LDI/quick_start.md)
-- [数据合成工具快速体验](docs/zh_CN/ppaug/quick_start.md)
+- [数据合成工具快速体验](docs/zh_CN/PP-EDA/quick_start.md)
 - 开源数据集和标注工具大全@赵军
 
 ## 👫 开源社区
@@ -67,8 +67,8 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
     - [图像方向校正工具](docs/zh_CN/PP-LDI/image_orientation_correction.md)
     - [低质图像过滤工具](docs/zh_CN/PP-LDI/low_quality_image_filtering.md)
 - EasyDataAugment 数据扩充方案
-  - [快速体验](docs/zh_CN/ppaug/quick_start.md)
-  - [流程详解](docs/zh_CN/ppaug/EasyDataAug.md)
+  - [快速体验](docs/zh_CN/PP-EDA/quick_start.md)
+  - [流程详解](docs/zh_CN/PP-EDA/EasyDataAug.md)
 - 开源数据集大全@赵军
 - 数据标注工具大全@赵军
 
