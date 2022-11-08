@@ -46,14 +46,66 @@ pip3 install dist/easydata-x.x.x-py3-none-any.whl # x.x.x是easydata的版本号
 
 PP-EDA 提供两种数据自动扩充模式:
 
-- img2img
-适用于图像识别类任务例如：图像分类、图像识别、OCR文本识别。输入原始图片，自动完成基于图片的数据增广、筛选、清洗功能，输出扩充后的数据集。
+- img2img 
+
+适用于图像识别类任务（例如：图像分类、图像识别、OCR文本识别）， 提供原始图片，PP-EDA将自动完成基于图片的数据增广、筛选、清洗功能，输出扩充后的数据集。
+
+以分类任务为例，准备原始训练数据和标签文件，其中标签文件内容为：
+
+```
+" 图像文件名                 图像标注信息 "
+
+train/n01440764_15008.JPEG 0
+train/n01530575_10039.JPEG 1
+train/n01601694_4224.JPEG 2
+```
+**注意：** txt文件中默认图片路径和图片标签用空格分割，如是ocr识别任务则默认使用“\t”分割
+
+最终输入数据应有如下文件结构：
+
+```
+demo/clas_data/ 
+|-- train  # 原始训练数据
+|   |-- n01440764_15008.JPEG
+|   |-- n01530575_10039.JPEG
+|   |-- n01601694_4224.JPEG
+|   |-- n01641577_14447.JPEG
+|   |-- n01682714_8438.JPEG
+|   `-- n01698640_9242.JPEG
+`-- train_list.txt # 数据标签
+```
 
 - text2img
+
 适用于OCR文本识别任务。输入文本语料、字体、背景图，自动完成基于语料的图像生成、筛选、清洗功能，输出扩充后的数据集。
+
+准备字体文件、背景图和原始语料文件，其中原始语料文件内容为：
+
+```
+母婴百汇
+停车场
+品质沙龙
+散作乾坤万里春
+24小时营业
+```
+
+**注意：** 每行代表一条语料
+
+最终输入数据应有如下文件结构：
+
+```
+demo/ocr_rec/
+|-- bg
+|-- corpus.txt
+|-- font
+    |-- 1.ttf
+    |-- 2.ttf
+```
+
 
 
 `EasyData/demo` 路径下提供了样例图，可参考样例组织自己的数据格式。
+
 
 如需使用自定义数据，注意将下方 `--ori_data_dir` 和 `--label_file` 参数替换为相应的测试图片路径和标签路径。
 
@@ -99,7 +151,7 @@ easydata --model ppeda --ori_data_dir demo/clas_data/ --label_file demo/clas_dat
 easydata --model ppeda --ori_data_dir demo/ocr_data/ --label_file demo/ocr_data/train_list.txt --gen_mode img2img --model_type ocr_rec
 ```
 
--text2img
+- text2img
 
 输入文本数据，生成图像数据，需提供语料路径、字体路径、背景图路径:
 
@@ -155,7 +207,7 @@ ppeda.predict()
 | 字段 | 任务类型 |说明 | 默认值 |
 |---|---|---|---|
 | model | 通用 |使用的模型工具，可选ppeda,ppldi | ppeda |
-| gen_mode | 数据生成 | 数据生成类型，可选 img2img, test2img | img2img |
+| gen_mode | 数据生成 | 数据生成类型，可选 img2img, text2img | img2img |
 | model_type | 数据生成 | 场景模型类型，可选 cls, ocr_rec | cls |
 | ori_data_dir | 数据生成 | 原始数据目录 | None |
 | label_file | 数据生成 | 原始数据标签 | None |
@@ -169,7 +221,7 @@ ppeda.predict()
 | bg_img_dir | 数据生成 | 文本图像生成背景图目录 | demo/ocr_rec/bg |
 | font_dir | 数据生成 | 文本图像生成字体目录 | demo/ocr_rec/font |
 | corpus_file | 数据生成 | 文本图像生成语料路径 | demo/ocr_rec/corpus.txt |
-| threads | 数据生成 | 文本图像线程数 | 1 |
+| threads | 数据生成 | 文本图像生成线程数 | 1 |
 | repeat_ratio | 数据去重 | 图像去重的阈值，图像相似度得分大于该阈值会被剔除 | 0.9 |
 | compare_out | 数据去重 | 去重过滤的中间结果 | tmp/rm_repeat.txt |
 | quality_ratio | 低质过滤 | 低质过滤的阈值，图像质量得分低于该阈值会被剔除 | 0.2 |
