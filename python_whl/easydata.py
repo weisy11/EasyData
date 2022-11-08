@@ -221,6 +221,7 @@ class PPEDA(PPAug):
         self.config = config.get_config(model_config, show=False)
         self.config = config.merge_gen_config(self.config, args.__dict__,
                                               "DataGen")
+        self.delimiter = self.config["DataGen"].get('delimiter', ' ')
         if args.gen_mode == "text2img":
             self.gen_ocr = GenOCR(self.config["DataGen"]["config"])
             self.bg_img_dir = args.bg_img_dir
@@ -229,11 +230,11 @@ class PPEDA(PPAug):
             self.output_dir = args.out_dir
             self.bg_img_per_word_num = args.bg_num_per_word
             self.threads = args.threads
-            self.delimiter = self.config["DataGen"].get('delimiter', '\t')
+        if args.model_type == "ocr_rec":
+             self.delimiter = "\t"
         self.aug_type = args.ops
         self.gen_num = args.gen_num
         self.gen_ratio = args.gen_ratio
-        self.delimiter = args.delimiter
         self.gen_label = args.gen_label
         self.gen_mode = args.gen_mode
         self.compare_out = args.compare_out
