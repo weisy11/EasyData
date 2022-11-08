@@ -214,7 +214,6 @@ class PPEDA(PPAug):
         
         self.check_dir(args.gen_label)
         self.check_dir(args.compare_out)
-        self.check_dir(args.final_label)
 
         if not os.path.exists("tmp"):
             os.makedirs("tmp")
