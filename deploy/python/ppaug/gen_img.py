@@ -41,7 +41,7 @@ def get_image_file_list(img_file):
     imgs_lists = []
     if not os.path.exists(img_file):
         raise Exception("{} does not exist!".format(img_file))
-    with open(img_file, "r") as file:
+    with open(img_file, "r", encoding="utf-8") as file:
         for data_line in file.readlines():
             imgs_lists.append(data_line)
     return imgs_lists
@@ -94,7 +94,7 @@ class GenAug(object):
         self.gen_num = config["gen_num"]
         self.img_list = get_image_file_list(config["label_file"])
 
-        self.imgs_dir = config["data_dir"]
+        self.imgs_dir = config["ori_data_dir"]
 
         if not os.path.exists(config["img_save_folder"] + "/" + self.ops):
             os.makedirs(config["img_save_folder"] + "/" + self.ops)

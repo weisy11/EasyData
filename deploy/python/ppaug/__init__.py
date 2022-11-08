@@ -46,12 +46,12 @@ class PPAug(object):
         self.gen_num = gen_params["gen_num"]
         self.output_dir = gen_params["img_save_folder"]
         self.gen_label = gen_params["gen_label"]
-        self.gen_mode = gen_params.get('mode', 'aug').lower()
+        self.gen_mode = gen_params.get('mode', 'img2img').lower()
         assert self.gen_mode in [
-            "ocr", "aug"
-        ], 'param lang must in {}, but got {}'.format(["ocr", "aug"],
+            "img2img", "text2img"
+        ], 'param gen_mode must in {}, but got {}'.format(["img2img", "text2img"],
                                                       self.gen_mode)
-        if self.gen_mode == "ocr":
+        if self.gen_mode == "text2img":
             self.bg_img_per_word_num = gen_params["bg_num_per_word"]
             self.threads = gen_params["threads"]
             self.bg_img_dir = gen_params["bg_img_dir"]
@@ -59,10 +59,9 @@ class PPAug(object):
             self.corpus_file = gen_params["corpus_file"]
             self.gen_ocr = GenOCR(gen_params["config"])
             self.delimiter = gen_params.get('delimiter', '\t')
-        elif self.gen_mode == "aug":
+        elif self.gen_mode == "img2img":
             self.gen_ratio = gen_params["gen_ratio"]
             self.delimiter = gen_params.get('delimiter', ' ')
-            self.check_dir(self.gen_label)
             self.ori_label = gen_params["label_file"]
             self.aug_type = gen_params["ops"]
 
@@ -170,8 +169,9 @@ class PPAug(object):
     def run(self):
         # gen aug data
         logger.info('{}Start Gen Img{}'.format('*' * 10, '*' * 10))
+        self.check_dir(self.gen_label)
 
-        if self.gen_mode == "ocr":
+        if self.gen_mode == "text2img":
             self.gen_ocr(self.bg_img_dir, self.font_dir, self.corpus_file,
                          self.gen_num, self.output_dir,
                          self.bg_img_per_word_num, self.threads,
