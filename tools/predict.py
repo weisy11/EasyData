@@ -20,7 +20,7 @@ sys.path.append(os.path.abspath(os.path.join(__dir__, '../deploy/')))
 from ppcv.core.config import ArgsParser
 
 from python.ppldi import PPDataImprove
-from python.ppaug import PPAug
+from python.ppeda import PPEasyDataAug
 from utils.utils import load_yaml
 
 def argsparser():
@@ -65,7 +65,7 @@ if __name__ == '__main__':
         ppldi = PPDataImprove(args)
         ppldi.run()
     elif "DataGen" in yaml_data:
-        ppaug = PPAug(args)
-        ppaug.run()
+        ppeda = PPEasyDataAug(args)
+        ppeda.run()
     else:
         raise Exception("Error config")

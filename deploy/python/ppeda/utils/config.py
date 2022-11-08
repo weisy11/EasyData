@@ -17,7 +17,7 @@ import copy
 import argparse
 import yaml
 
-from python.ppaug.utils import logger
+from python.ppeda.utils import logger
 
 __all__ = ['get_config', 'print_config']
 
@@ -201,7 +201,7 @@ def get_config(fname, overrides=None, show=True):
 
 
 def parser():
-    parser = argparse.ArgumentParser("ppaug script")
+    parser = argparse.ArgumentParser("ppeda script")
     parser.add_argument('-c',
                         '--config',
                         type=str,

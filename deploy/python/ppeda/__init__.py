@@ -27,15 +27,15 @@ from ppcv.engine.pipeline import Pipeline
 from ppcv.utils.logger import setup_logger
 from ppcv.core.config import ArgsParser
 
-from python.ppaug.utils import config
-from python.ppaug.utils import logger
-from python.ppaug.utils.get_image_list import get_image_list_from_label_file
-from python.ppaug.gen_img import GenAug
-from python.ppaug.gen_ocr_rec import GenOCR
-from python.ppaug.predict.build_gallery import GalleryBuilder
+from python.ppeda.utils import config
+from python.ppeda.utils import logger
+from python.ppeda.utils.get_image_list import get_image_list_from_label_file
+from python.ppeda.gen_img import GenAug
+from python.ppeda.gen_ocr_rec import GenOCR
+from python.ppeda.predict.build_gallery import GalleryBuilder
 
 
-class PPAug(object):
+class PPEasyDataAug(object):
 
     def __init__(self, cfg):
         self.save_list = []
