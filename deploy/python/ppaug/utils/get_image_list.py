@@ -39,7 +39,7 @@ def get_image_list(img_file):
 def get_image_list_from_label_file(label_file_path, delimiter=' '):
     imgs_lists = []
     gt_labels = []
-    with open(label_file_path, "r") as fin:
+    with open(label_file_path, "r", encoding="utf-8") as fin:
         lines = fin.readlines()
         for line in lines:
             image_name, label = line.strip("\n").split(delimiter)
