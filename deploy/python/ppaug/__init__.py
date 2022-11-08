@@ -245,7 +245,6 @@ class PPAug(object):
         logger.info('{}Start use big model to filer quality{}'.format(
             '*' * 10, '*' * 10))
         cnt = 0
-        self.check_dir(self.big_model_out)
         with open(self.big_model_out, "w") as save_file:
             for idx, img_path in enumerate(image_list):
                 file_name = os.path.join(root_path, img_path)
