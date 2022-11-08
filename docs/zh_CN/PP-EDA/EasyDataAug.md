@@ -23,74 +23,77 @@ pip install -r requirements.txt
 ## 3. 数据准备
 本项目主要以图像分类、文本识别为例进行讲解，并且提供了一些demo数据，位于[demo](../../../demo/)文件夹下。如若在自己的数据集上进行使用，可以参考下面数据组织形式进行准备数据。
 
-- 图像分类数据集组织形式：
+### 3.1 图像分类数据集：
 
-```
-├── clas_data                                
-│   ├── train    
-│   ├── train_list.txt   
-```
-* train_list.txt文件中默认请将图片路径和图片标签用 空格 分割，txt文件里的内容如下:
+  提供原始图片，PP-EDA将自动完成基于图片的数据增广、筛选、清洗功能，输出扩充后的数据集。 原始数据组织形式：
 
-```
-" 图像文件名 图像类别 "
+  ```
+  ├── clas_data                                
+  │   ├── train    
+  │   ├── train_list.txt   
+  ```
+  train_list.txt文件中默认请将图片路径和图片标签用 空格 分割，txt文件里的内容如下:
 
-train/xxxx1.jpg 0
-train/xxxx2.jpg 1
-...
-```
+  ```
+  " 图像文件名 图像类别 "
 
-- 文本识别数据集组织形式：
-
-文本识别数据扩充支持两种模式
-
-1. img2img
-
-提供原始图片，PP-EDA将自动完成基于图片的数据增广、筛选、清洗功能，输出扩充后的数据集。
-
-准备原始训练数据和标签文件`train_list.txt` ：
-
-```
-├── ocr_data                                
-│   ├── images    
-│   ├── train_list.txt   
-```
-train_list.txt文件中 图片路径和图片标签默认使用 \t 分割，具体内容如下:
-
-```
-" 图像文件名                 图像标注信息 "
-
-images/xxxx1.jpg            简单可依赖
-images/xxxx2.jpg        用科技让复杂的世界更简单
-...
-```
-
-2. text2img
-
-提供文本语料、字体、背景图，PP-EDA自动完成基于语料的文本识别图像生成、筛选、清洗功能，输出扩充后的数据集。
+  train/xxxx1.jpg 0
+  train/xxxx2.jpg 1
+  ...
+  ```
 
 
-准备字体文件、背景图和原始语料文件`corpus.txt` :
+### 3.2 文本识别数据集：
+  
+  文本识别数据扩充支持两种模式
 
-```
-├──ocr_rec/
-│  |-- bg
-│  |-- corpus.txt
-│  |-- font
-│      |-- 1.ttf
-│      |-- 2.ttf
-```
+  - img2img
 
-其中`corpus.txt`文件内容为：
+  提供原始图片，PP-EDA将自动完成基于图片的数据增广、筛选、清洗功能，输出扩充后的数据集。
 
-```
-母婴百汇
-停车场
-品质沙龙
-散作乾坤万里春
-24小时营业
-```
-**说明：** 每行代表一条语料
+  原始训练数据和标签文件`train_list.txt`组织形式 ：
+
+  ```
+  ├── ocr_data                                
+  │   ├── images    
+  │   ├── train_list.txt   
+  ```
+  train_list.txt文件中 图片路径和图片标签默认使用 \t 分割，具体内容如下:
+
+  ```
+  " 图像文件名                 图像标注信息 "
+
+  images/xxxx1.jpg            简单可依赖
+  images/xxxx2.jpg        用科技让复杂的世界更简单
+  ...
+  ```
+
+  - text2img
+
+  提供文本语料、字体、背景图，PP-EDA自动完成基于语料的文本识别图像生成、筛选、清洗功能，输出扩充后的数据集。
+
+
+  字体文件、背景图和原始语料文件`corpus.txt`组织形式 :
+
+  ```
+  ├──ocr_rec/
+  │  |-- bg
+  │  |-- corpus.txt
+  │  |-- font
+  │      |-- 1.ttf
+  │      |-- 2.ttf
+  ```
+
+  其中`corpus.txt`文件内容为：
+
+  ```
+  母婴百汇
+  停车场
+  品质沙龙
+  散作乾坤万里春
+  24小时营业
+  ```
+  **说明：** 每行代表一条语料
 
 
 
@@ -98,25 +101,34 @@ images/xxxx2.jpg        用科技让复杂的世界更简单
 
 完成环境和数据准备后，使用PP-EDA工具进行自动数据扩充。整个流程包含三个部分：离线增强数据、低质数据过滤、重复数据过滤，下面依次进行介绍。
 
-![eda](../../images/aug/eda_pipeline.png)
+<div align="center">
+    <img src="../../images/aug/eda_pipeline.png" width=800 hight=400>
+</div>
+
 
 ### 4.1 离线增强数据
 数据增广普遍应用于训练阶段，且大都采用在线增广的形式来随机生成不同的增广图，但是在线增广图的质量却无法保证，对模型提升的精度有限。PP-EDA 工具主要参考真实场景的训练数据，离线合成一批丰富有效的增广数据。该工具融合了裁剪类、变换类和擦除类的代表算法，如 RandomCrop, RandAugment, RandomErasing, Gridmask, Tia等。具体地，可以通过指定增广方式和增广数量来离线生成增广数据，以 ImageNet 分类数据集为例，使用 PP-EDA 工具得到的离线增广效果图如下：
 
-![aug](../../images/aug/aug.png)
+<div align="center">
+    <img src="../../images/aug/aug.png" width=800 hight=400>
+</div>
 
 ### 4.2 重复数据过滤
 由于使用了多种增广方式，并且每种增广都具有一定的随机性，如增广的强度，增广的位置，因此大量生成离线增广数据可能会有重复数据，也即图像（特征）极其相似的增广图，不仅增广图和原始图片会产生重复数据，增广图之间也会产生重复，如下图所示：
 
-![repeat](../../images/aug/repeat.png)
+<div align="center">
+    <img src="../../images/aug/repeat.png" width=800 hight=400>
+</div>
+
 
 可以看出，这些增广图具有很高的相似度，因此去除这些重复数据是很有必要的。具体地，采用[PP-ShiTu](https://github.com/PaddlePaddle/PaddleClas/blob/develop/docs/zh_CN/training/PP-ShiTu/feature_extraction.md)模型中的特征提取模块对离线增广的图像进行特征提取，然后将特征相似度高于一定阈值的增广数据进行剔除。为了便于去除所有可能的重复数据，使用原始数据和所有增广后的数据来构建全量特征检索库（gallery），然后依次对增广图进行特征查询（query），保留得分第二高的查询结果，如果得分大于阈值（如0.95），那么判定该数据为重复数据。
 
 ### 4.3 低质数据过滤
 由于数据增广具有一定的随机性，离线增广后的数据可能会存在一些低质量的数据，这些数据会影响模型的性能，因此针对低质数据进行过滤是一个很有必要的步骤。具体地，采取场景中对应的大模型对离线增广的所有数据进行前向预测，将得分低于某个阈值的增广图进行去除。以 ImageNet 分类数据集为例，使用大模型（PPLCNet）来对离线增广后数据进行前向推理，去除分类得分小于0.2的增广数据，低质数据示例如下：
 
-![low_quality_1](../../images/aug/low_quality_1.png)
-![low_quality_2](../../images/aug/low_quality_2.png)
+<div align="center">
+    <img src="../../images/aug/low_quality.png" width=800 hight=400>
+</div>
 
 可以看出，图一为采用 RandomErasing 的增广图，关键区域（目标区域）几乎全部被擦除，图二为采用 Gridmask 的增广图，关键区域也被掩盖，这些图像都大大增加了模型学习的难度，因此需要对这些低质数据进行过滤。
 

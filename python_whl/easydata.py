@@ -218,6 +218,8 @@ class PPEDA(PPAug):
         args.__dict__.update(**kwargs)
         self.save_list = []
         model_config = PPEDA_CONFIG[args.gen_mode]['config']
+        if args.model_type == "ocr_rec":
+             args.delimiter = "\t"
         self.config = config.get_config(model_config, show=False)
         self.config = config.merge_gen_config(self.config, args.__dict__,
                                               "DataGen")
@@ -230,8 +232,6 @@ class PPEDA(PPAug):
             self.output_dir = args.out_dir
             self.bg_img_per_word_num = args.bg_num_per_word
             self.threads = args.threads
-        if args.model_type == "ocr_rec":
-             self.delimiter = "\t"
         self.aug_type = args.ops
         self.gen_num = args.gen_num
         self.gen_ratio = args.gen_ratio
@@ -245,6 +245,7 @@ class PPEDA(PPAug):
         self.config["FeatureExtract"]["thresh"] = args.repeat_ratio
         self.config["IndexProcess"]["all_label_file"] = args.gen_label
         self.config["IndexProcess"]["image_root"] = args.out_dir
+        self.config["IndexProcess"]["delimiter"] = args.delimiter
 
         if not os.path.exists("tmp"):
             os.makedirs("tmp")
