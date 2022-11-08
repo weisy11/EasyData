@@ -46,10 +46,10 @@ class PPAug(object):
         self.gen_num = gen_params["gen_num"]
         self.output_dir = gen_params["img_save_folder"]
         self.gen_label = gen_params["gen_label"]
-        self.gen_mode = gen_params.get('mode', 'aug').lower()
+        self.gen_mode = gen_params.get('mode', 'img2img').lower()
         assert self.gen_mode in [
             "img2img", "text2img"
-        ], 'param lang must in {}, but got {}'.format(["img2img", "text2img"],
+        ], 'param gen_mode must in {}, but got {}'.format(["img2img", "text2img"],
                                                       self.gen_mode)
         if self.gen_mode == "text2img":
             self.bg_img_per_word_num = gen_params["bg_num_per_word"]
