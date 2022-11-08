@@ -34,12 +34,12 @@
 <a name="2.1"></a>
 #### 2.1 训练
 
-图像方向矫正模型本质为图像分类任务，同时考虑到模型需要足够轻量，因此我们采用了 PaddleClas 的 PULC 方案，训练详情可以参考[PULC图像方向分类](@clas_pulc)。
+图像方向矫正模型本质为图像分类任务，同时考虑到模型需要足够轻量，因此我们采用了 PaddleClas 的 PULC 方案，训练详情可以参考[PULC图像方向分类](https://github.com/PaddlePaddle/PaddleClas/blob/develop/docs/zh_CN/models/PULC/PULC_image_orientation.md)。
 
 <a name="2.2"></a>
 #### 2.2 部署
 
-对于图像方向矫正模型的使用方法，我们提供了 EasyData whl 的方式，支持命令行直接预测以及在 Python 脚本中调用的方式，具体可以参考[图像方向矫正模型部署](@quickstart)。
+对于图像方向矫正模型的使用方法，我们提供了 EasyData whl 的方式，支持命令行直接预测以及在 Python 脚本中调用的方式，具体可以参考[图像方向矫正模型部署](quick_start.md#211)。
 
 <a name="3"></a>
 ## 3. 视觉任务表现
