@@ -114,7 +114,7 @@ class PPAug(object):
 
     def get_label(self, data_file, delimiter=" "):
         self.all_label = {}
-        with open(data_file, "r") as f:
+        with open(data_file, "r", encoding="utf-8") as f:
             for line in f.readlines():
                 path, label = line.strip().split(delimiter)
                 path = path.split("/")[-1]
@@ -124,7 +124,7 @@ class PPAug(object):
     def rm_repeat(self, compare_file, out_file, thresh):
         count = 0
         with open(out_file, "w", encoding="utf-8") as new_aug_file:
-            with open(compare_file, "r") as f:
+            with open(compare_file, "r", encoding="utf-8") as f:
                 for line in f.readlines():
                     query = line.strip().split("\t")[0]
                     gallery = line.strip().split("\t")[1:-1]
@@ -154,7 +154,7 @@ class PPAug(object):
         assert len(filenames) > 0, "Can not find any file in {}".format(
             label_dir)
         self.check_dir(all_file)
-        f = open(all_file, 'w')
+        f = open(all_file, 'w', encoding="utf-8")
         for filename in filenames:
             if os.path.isfile(os.path.join(label_dir, filename)):
                 filepath = label_dir + '/' + filename
@@ -181,7 +181,7 @@ class PPAug(object):
                              all_file=self.gen_label)
 
         else:
-            with open(self.gen_label, "w") as f:
+            with open(self.gen_label, "w", encoding="utf-8") as f:
                 for aug_type in self.aug_type:
                     self.config["DataGen"]["aug"] = aug_type
                     dataaug = GenAug(self.config)
@@ -201,7 +201,7 @@ class PPAug(object):
         image_list, gt = get_image_list_from_label_file(
             self.all_label_file, self.delimiter)
 
-        with open("tmp/repeat.txt", "w") as write_file:
+        with open("tmp/repeat.txt", "w", encoding="utf-8") as write_file:
             for idx, image_file in enumerate(image_list):
                 preds = {}
                 output = []
@@ -245,7 +245,7 @@ class PPAug(object):
         logger.info('{}Start use big model to filer quality{}'.format(
             '*' * 10, '*' * 10))
         cnt = 0
-        with open(self.big_model_out, "w") as save_file:
+        with open(self.big_model_out, "w", encoding="utf-8") as save_file:
             for idx, img_path in enumerate(image_list):
                 file_name = os.path.join(root_path, img_path)
                 if os.path.exists(file_name):
