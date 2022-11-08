@@ -10,9 +10,7 @@ Todo : 挑选并合成可视化的效果图。
 
 |             PP-LDI数据质量提升效果图             |
 | :----------------------------------------------------: |
-| <img src="./docs/images/PP-LDI/PP-LDI-demo.gif"  width = "450" /> |
-
-[LDI数据质量提升效果图@崔程]
+| <img src="./docs/images/PP-LDI/PP-LDI-demo.gif"  width = "600" /> |
 
 [EDA数据合成效果图@晓婷]
 
@@ -63,7 +61,7 @@ Todo: 参照PaddleOCR等套件，补齐直播预告和工具说明
 ## 📖 文档教程
 
 - 运行环境准备 @晓婷
-- Light-weight Data Improve 数据质量提升方案
+- **L**ight-weight **D**ata **I**mprove 数据质量提升方案
   - [快速体验](docs/zh_CN/PP-LDI/quick_start.md)
   - [数据质量提升工具集](docs/zh_CN/PP-LDI/PP-LDI.md)
     - [图像方向校正工具](docs/zh_CN/PP-LDI/image_orientation_correction.md)
