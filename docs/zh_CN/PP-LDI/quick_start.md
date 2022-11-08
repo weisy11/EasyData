@@ -119,6 +119,21 @@ easydata --model image_orientation --input ./image_orientation/ --device cpu
 {'filename': '/paddle/data/easydata_demo_imgs/image_orientation/0.jpg', 'class_ids': 0, 'scores': 0.9267141, 'label_names': '0°'}
 ```
 
+对于图像方向矫正模型，还可以通过参数 `--thresh` 设置 score 的阈值。设置阈值则意味着，当 top1 score > thresh 时，预测值为 top1 对应类别，否则预测值为默认类别 0，即表示 0°。而阈值默认值为0，表示以 top1 score 结果作为预测值。如将阈值设置为 0.93，命令如下所示：
+
+```bash
+easydata --model image_orientation --input ./image_orientation/ --device cpu --thresh 0.93
+```
+
+上述命令的运行结果如下所示：
+
+```bash
+{'filename': '/paddle/data/easydata_demo_imgs/image_orientation/3.jpg', 'class_ids': 0, 'scores': 0.023812257, 'label_names': '0°'}
+{'filename': '/paddle/data/easydata_demo_imgs/image_orientation/2.jpg', 'class_ids': 0, 'scores': 0.02494335, 'label_names': '0°'}
+{'filename': '/paddle/data/easydata_demo_imgs/image_orientation/0.jpg', 'class_ids': 0, 'scores': 0.92671424, 'label_names': '0°'}
+{'filename': '/paddle/data/easydata_demo_imgs/image_orientation/1.jpg', 'class_ids': 1, 'scores': 0.93460053, 'label_names': '90°'}
+```
+
 <a name="212"></a>
 
 #### 2.1.2 模糊图像过滤模型
@@ -186,6 +201,8 @@ print(results)
 
 * `model`：用于指定预测模型，目前支持图像方向矫正模型 `image_orientation`、模糊图像过滤模型 `clarity_assessment`、广告码图像过滤模型 `code_exists`；
 * `device`：用于指定预测平台，目前支持 `CPU`、`GPU`，默认为 `CPU`；
+
+同样以图像方向矫正模型为例，在与 PaddleClas 图像分类模型结合使用时，可以参考示例[代码](../../../deploy/python/ppldi/demo.py)。
 
 ## 3. 小结
 
