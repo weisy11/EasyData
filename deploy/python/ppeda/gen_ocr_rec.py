@@ -88,7 +88,7 @@ def load_config(file_path):
     """
     _, ext = os.path.splitext(file_path)
     assert ext in ['.yml', '.yaml'], "only support yaml files for now"
-    merge_config(yaml.load(open(file_path), Loader=yaml.Loader))
+    merge_config(yaml.load(open(file_path, encoding="utf-8"), Loader=yaml.Loader))
     return global_config
 
 

@@ -18,8 +18,8 @@ import numpy as np
 from tqdm import tqdm
 import pickle
 
-from python.ppaug.utils import logger
-from python.ppaug.utils import config
+from python.ppeda.utils import logger
+from python.ppeda.utils import config
 
 
 def split_datafile(data_file, image_root, delimiter="\t"):

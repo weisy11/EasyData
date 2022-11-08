@@ -22,9 +22,9 @@ import argparse
 
 from ppcv.engine.pipeline import Pipeline
 from utils.utils import load_yaml
-from python.ppaug import PPAug
-from python.ppaug.utils import config
-from python.ppaug.gen_ocr_rec import GenOCR
+from python.ppeda import PPEasyDataAug
+from python.ppeda.utils import config
+from python.ppeda.gen_ocr_rec import GenOCR
 
 __all__ = ['EasyData']
 
@@ -211,7 +211,7 @@ def parse_args():
     return parser.parse_args()
 
 
-class PPEDA(PPAug):
+class PPEDA(PPEasyDataAug):
 
     def __init__(self, **kwargs):
         args = parse_args()
