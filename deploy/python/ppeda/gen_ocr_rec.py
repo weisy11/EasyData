@@ -23,7 +23,7 @@ def parse_args():
     parser.add_argument("--config", type=str, default='utils/default.yaml')
     parser.add_argument("--bg_num", type=int, default=5)
     parser.add_argument("--threads", type=int, default=5)
-    parser.add_argument("--img_count", type=int, default=10)
+    parser.add_argument("--gen_num", type=int, default=10)
     parser.add_argument("--bg_img_dir", type=str, default="train_data/bg")
     parser.add_argument("--font_dir", type=str, default="train_data/fonts")
     parser.add_argument("--word_file",
@@ -88,11 +88,13 @@ def load_config(file_path):
     """
     _, ext = os.path.splitext(file_path)
     assert ext in ['.yml', '.yaml'], "only support yaml files for now"
-    merge_config(yaml.load(open(file_path, encoding="utf-8"), Loader=yaml.Loader))
+    merge_config(
+        yaml.load(open(file_path, encoding="utf-8"), Loader=yaml.Loader))
     return global_config
 
 
 def select_bg(bg_dir, number):
+    filenames = os.listdir(bg_dir)
     samples = []
     num = max(1, int(number))
     pathDir = glob.glob('{}/**.*'.format(bg_dir))
@@ -149,6 +151,7 @@ class GenOCR(object):
         label_file = io.open(label_file, "w", encoding="utf-8")
         for word in word_list:
             bg_list = select_bg(bg_img_dir, bg_img_per_word_num)
+
             cur_thread_img_save_folder = '{}/{}'.format(
                 img_save_folder, save_number)
             os.makedirs(cur_thread_img_save_folder, exist_ok=True)
@@ -179,7 +182,7 @@ class GenOCR(object):
                  bg_img_dir="train_data/bg",
                  font_dir="train_data/font",
                  corpus_file="train_data/corpus.txt",
-                 img_count=10,
+                 gen_num=10,
                  img_save_folder="output",
                  bg_img_per_word_num=5,
                  threads=5,
@@ -189,25 +192,40 @@ class GenOCR(object):
             for lines in f.readlines():
                 word_list.append(str(lines).replace("\n", ""))
 
-        thread_word_list = chunker(word_list, threads)
-        thread_count_list = compute_thread_count(thread_word_list, img_count)
+        assert len(os.listdir(
+            font_dir)) > 0, "Can not find any font in {}".format(font_dir)
+        assert len(os.listdir(
+            bg_img_dir)) > 0, "Can not find any img in {}".format(bg_img_dir)
 
-        process_pool = Pool(threads)
-        for part_id in range(0, threads):
-            label_filename = "{}/label_{}.txt".format(img_save_folder, part_id)
-
+        if threads == 1:
+            label_filename = "{}/label_{}.txt".format(img_save_folder, 0)
             print("label_file_name: {}".format(label_filename))
+            self.gen_ocr_img(word_list, label_filename, 0, bg_img_dir,
+                             font_dir, gen_num, bg_img_per_word_num,
+                             img_save_folder, delimiter)
 
-            process_pool.apply_async(
-                self.gen_ocr_img,
-                args=(thread_word_list[part_id], label_filename, part_id,
-                      bg_img_dir, font_dir, thread_count_list[part_id],
-                      bg_img_per_word_num, img_save_folder, delimiter))
+        elif threads > 1:
+            thread_word_list = chunker(word_list, threads)
+            thread_count_list = compute_thread_count(thread_word_list, gen_num)
 
-        print('Waiting for all subprocesses done...')
-        process_pool.close()
-        process_pool.join()
-        print('All subprocesses done.')
+            process_pool = Pool(threads)
+
+            for part_id in range(0, threads):
+                label_filename = "{}/label_{}.txt".format(
+                    img_save_folder, part_id)
+
+                print("label_file_name: {}".format(label_filename))
+
+                process_pool.apply_async(
+                    self.gen_ocr_img,
+                    args=(thread_word_list[part_id], label_filename, part_id,
+                          bg_img_dir, font_dir, thread_count_list[part_id],
+                          bg_img_per_word_num, img_save_folder, delimiter))
+
+            print('Waiting for all subprocesses done...')
+            process_pool.close()
+            process_pool.join()
+            print('All subprocesses done.')
 
 
 def main():
@@ -220,7 +238,7 @@ def main():
     gen_ocr(bg_img_dir="train_data/bg",
             font_dir="train_data/font",
             corpus_file="train_data/corpus.txt",
-            img_count=5,
+            gen_num=5,
             img_save_folder="output",
             bg_img_per_word_num=5,
             threads=1)
