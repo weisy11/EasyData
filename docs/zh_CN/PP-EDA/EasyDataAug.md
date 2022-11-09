@@ -229,25 +229,19 @@ BigModel:
 
 识图任务是基于[PP-ShiTu系统](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/docs/zh_CN/models/PP-ShiTu/README.md#pp-shitu-v2%E5%9B%BE%E5%83%8F%E8%AF%86%E5%88%AB%E7%B3%BB%E7%BB%9F)，它是一个实用轻量级通用图像识别系统，包含主体检测、特征提取、向量检索三个步骤。该任务主要进行特征提取阶段的模型训练，基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PP-LCNetv2识别模型](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/GeneralRecognitionV2/GeneralRecognitionV2_PPLCNetV2_base.yaml)配置进行验证，数据集约10W。在使用PP-EDA进行扩充数据后，将增广数据与原始数据以1:1的比例混合，送入模型迭代训练。具体训练步骤参考[特征提取训练](https://github.com/PaddlePaddle/PaddleClas/blob/develop/docs/zh_CN/training/PP-ShiTu/feature_extraction.md#52-%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83)。
 
-**整图方向分类**
-
-该任务是实用轻量图像分类解决方案（PULC, Practical Ultra Lightweight Classification）的一个应用场景，主要是对一张图像的方向进行分类，
-基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PULC整图方向分类模型](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/image_orientation/PPLCNet_x1_0.yaml)配置进行验证，数据集采用ImageNet1k数据和部分标注的文本数据，约136.5W。在使用PP-EDA进行扩充数据后，将增广数据与原始数据以1:1的比例混合，送入模型迭代训练。具体训练步骤参考[整图方向分类训练](https://github.com/PaddlePaddle/PaddleClas/blob/develop/docs/zh_CN/models/PULC/PULC_image_orientation.md)。
-
 **广告码图像过滤**
 
 该任务也是实用轻量图像分类解决方案（PULC, Practical Ultra Lightweight Classification）的一个应用场景，主要是对一张图像中是否含有二维码、条形码等进行分类，基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PULC广告码图像过滤模型](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/code_exists/PPLCNet_x1_0.yaml)配置进行验证，数据集，约4W。在使用PP-EDA进行扩充数据后，将增广数据与原始数据以1:1的比例混合，送入模型迭代训练。具体训练步骤参考[广告码图像过滤训练](https://github.com/PaddlePaddle/PaddleClas/blob/develop/docs/zh_CN/models/PULC/PULC_code_exists.md)
 
 ## 5.1 PP-EDA实验效果
-为了验证 PP-EDA 离线增广数据的效果，在上述不同的场景下进行分别验证，包含文本识别、图像分类、识图任务、整图方向分类、广告码图像过滤场景。为了消除数据量变化带来的影响，保证增广后的数据量和baseline数据量相同，会将原始数据进行复制作为baseline，具体实验结果如下表：
+为了验证 PP-EDA 离线增广数据的效果，在上述不同的场景下进行分别验证，包含文本识别、图像分类、识图任务、广告码图像过滤场景。为了消除数据量变化带来的影响，保证增广后的数据量和baseline数据量相同，会将原始数据进行复制作为baseline，具体实验结果如下表：
 
 | 实验任务 | 模型 | 配置文件 | baseline精度 | 增广后精度 |
 | :--: | :--: | :--: |:--: |:------: |
 |  文本识别    | ch_PP-OCRv3_rec | [ch_PP-OCRv3_rec.yml](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/configs/rec/PP-OCRv3/ch_PP-OCRv3_rec.yml)  | 72.95%   |   74.15% (+1.20%)  | 
-|  图像分类    | PP-LCNet        | [PPLCNet_x1_0.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/ImageNet/PPLCNet/PPLCNet_x1_0.yaml) | 78.23%   |   84.47% (+4.37%)  |
+|  图像分类    | PP-LCNet        | [PPLCNet_x1_0.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/ImageNet/PPLCNet/PPLCNet_x1_0.yaml) | 78.23%   |   80.03% (+1.80%)  |
 |  图像分类    | PP-HGNet        | [PPHGNet_small.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/ImageNet/PPHGNet/PPHGNet_small.yaml) |   90.80%   |   91.33% (+0.53%)  |
 |  识图任务    | PP-LCNetv2      | [GeneralRecognitionV2_PPLCNetV2_base.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/GeneralRecognitionV2/GeneralRecognitionV2_PPLCNetV2_base.yaml) | 66.80%   |   67.70% (+0.90%)  |
-|  整图方向分类 | PP-LCNet       | [PPLCNet_x1_0.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/image_orientation/PPLCNet_x1_0.yaml) | 89.90%   |   90.12% (+0.22%)  |
-| 广告码图像过滤| PP-LCNet        | [PPLCNet_x1_0.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/code_exists/PPLCNet_x1_0.yaml) |   95.29%   |   95.73% (+0.44%)  |
+| 广告码图像过滤| PP-LCNet        | [PPLCNet_x1_0.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/code_exists/PPLCNet_x1_0.yaml) |   94.40%   |   95.73% (+1.33%)  |
 
 可以看出，使用 PP-EDA 工具对数据进行增广后在不同场景中都有不同程度的效果提升。
