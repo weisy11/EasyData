@@ -131,6 +131,7 @@ class PPEasyDataAug(object):
         # gen aug data
         logger.info('{}Start Gen Img{}'.format('*' * 10, '*' * 10))
         check_dir(self.gen_label)
+        check_dir(self.compare_out)
 
         if self.gen_mode == "text2img":
             self.gen_ocr(self.bg_img_dir, self.font_dir, self.corpus_file,

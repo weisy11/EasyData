@@ -244,8 +244,6 @@ class PPEDA(PPEasyDataAug):
         self.gen_label = args.gen_label
         self.gen_mode = args.gen_mode
         self.compare_out = args.compare_out
-        self.check_dir(args.gen_label)
-        self.check_dir(args.compare_out)
         self.feature_thresh = args.repeat_ratio
 
         self.config["FeatureExtract"]["thresh"] = args.repeat_ratio
