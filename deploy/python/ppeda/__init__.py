@@ -1,3 +1,17 @@
+# copyright (c) 2021 PaddlePaddle Authors. All Rights Reserve.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import os
 import sys
 import subprocess
@@ -21,12 +35,13 @@ import logging
 from PIL import Image
 
 parent = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.abspath(os.path.join(parent, '../deploy/')))
+sys.path.insert(0, os.path.abspath(os.path.join(parent, '../../deploy/')))
 
 from ppcv.engine.pipeline import Pipeline
 from ppcv.utils.logger import setup_logger
 from ppcv.core.config import ArgsParser
 
+from python.ppeda.utils.utility import get_label, rm_repeat, check_dir, concat_file
 from python.ppeda.utils import config
 from python.ppeda.utils import logger
 from python.ppeda.utils.get_image_list import get_image_list_from_label_file
@@ -49,8 +64,8 @@ class PPEasyDataAug(object):
         self.gen_mode = gen_params.get('mode', 'img2img').lower()
         assert self.gen_mode in [
             "img2img", "text2img"
-        ], 'param gen_mode must in {}, but got {}'.format(["img2img", "text2img"],
-                                                      self.gen_mode)
+        ], 'param gen_mode must in {}, but got {}'.format(
+            ["img2img", "text2img"], self.gen_mode)
         if self.gen_mode == "text2img":
             self.bg_img_per_word_num = gen_params["bg_num_per_word"]
             self.threads = gen_params["threads"]
@@ -66,7 +81,7 @@ class PPEasyDataAug(object):
             self.aug_type = gen_params["ops"]
 
         self.compare_out = self.config["FeatureExtract"]["file_out"]
-        self.check_dir(self.compare_out)
+        check_dir(self.compare_out)
         self.feature_thresh = self.config["FeatureExtract"]["thresh"]
 
         if not os.path.exists("tmp"):
@@ -112,64 +127,10 @@ class PPEasyDataAug(object):
         with open(os.path.join(index_dir, "id_map.pkl"), "rb") as fd:
             self.id_map = pickle.load(fd)
 
-    def get_label(self, data_file, delimiter=" "):
-        self.all_label = {}
-        with open(data_file, "r", encoding="utf-8") as f:
-            for line in f.readlines():
-                path, label = line.strip().split(delimiter)
-                path = path.split("/")[-1]
-                self.all_label[path] = label
-        return self.all_label
-
-    def rm_repeat(self, compare_file, out_file, thresh):
-        count = 0
-        with open(out_file, "w", encoding="utf-8") as new_aug_file:
-            with open(compare_file, "r", encoding="utf-8") as f:
-                for line in f.readlines():
-                    query = line.strip().split("\t")[0]
-                    gallery = line.strip().split("\t")[1:-1]
-                    score = line.strip().split("\t")[-1]
-                    path = query.split("/")[-1]
-                    if float(score) > thresh and (gallery or
-                                                  query) not in self.save_list:
-                        count += 1
-                        self.save_list.append(gallery)
-                        self.save_list.append(query)
-                        new_aug_file.write(query + self.delimiter +
-                                           str(self.all_label[path]) + "\n")
-                    elif float(score) < thresh:
-                        count += 1
-                        self.save_list.append(query)
-                        new_aug_file.write(query + self.delimiter +
-                                           str(self.all_label[path]) + "\n")
-        return count
-
-    def check_dir(self, path):
-        if not os.path.exists(os.path.dirname(path)):
-            os.makedirs(os.path.dirname(path))
-        return
-
-    def concat_file(self, label_dir, all_file):
-        filenames = os.listdir(label_dir)
-        assert len(filenames) > 0, "Can not find any file in {}".format(
-            label_dir)
-        self.check_dir(all_file)
-        f = open(all_file, 'w', encoding="utf-8")
-        for filename in filenames:
-            if os.path.isfile(os.path.join(label_dir, filename)):
-                filepath = label_dir + '/' + filename
-                for line in open(filepath):
-                    if len(line) != 0:
-                        f.writelines(line)
-            else:
-                logger.info("{} is not the label file".format(filename))
-        f.close()
-        return all_file
-
     def run(self):
         # gen aug data
         logger.info('{}Start Gen Img{}'.format('*' * 10, '*' * 10))
-        self.check_dir(self.gen_label)
+        check_dir(self.gen_label)
 
         if self.gen_mode == "text2img":
             self.gen_ocr(self.bg_img_dir, self.font_dir, self.corpus_file,
@@ -177,8 +138,7 @@ class PPEasyDataAug(object):
                          self.bg_img_per_word_num, self.threads,
                          self.delimiter)
 
-            self.concat_file(label_dir=self.output_dir,
-                             all_file=self.gen_label)
+            concat_file(label_dir=self.output_dir, all_file=self.gen_label)
 
         else:
             with open(self.gen_label, "w", encoding="utf-8") as f:
@@ -190,6 +150,10 @@ class PPEasyDataAug(object):
         assert os.path.getsize(
             self.gen_label
         ), "Data generate Failed, Please check data_dir and label_file. "
+
+        logger.info('{}Generate Img has been saved in {} {}'.format(
+            '*' * 10, self.output_dir, '*' * 10))
+
         # build gallery
         logger.info('{}Start compare img feature{}'.format('*' * 10, '*' * 10))
         feature_extract = self.build_feature_compare()
@@ -222,10 +186,13 @@ class PPEasyDataAug(object):
                                      str(output[0]['rec_scores'][1]) + "\n")
 
         # rm repeat
-        all_label = self.get_label(self.all_label_file, self.delimiter)
-        final_count = self.rm_repeat(compare_file="tmp/repeat.txt",
-                                     out_file=self.compare_out,
-                                     thresh=self.feature_thresh)
+        all_label = get_label(self.all_label_file, self.delimiter)
+        final_count = rm_repeat(all_label,
+                                self.save_list,
+                                compare_file="tmp/repeat.txt",
+                                out_file=self.compare_out,
+                                thresh=self.feature_thresh,
+                                delimiter=self.delimiter)
 
         logger.info("Repeat img has been removed, new label file is {}".format(
             self.compare_out))
