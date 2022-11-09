@@ -5,7 +5,7 @@ DataGen:
   out_dir: "test"
   bg_num_per_word: 5
   threads: 1
-  bg_img_dir: "demo/clas_data/train/"
+  bg_img_dir: "demo/ocr_rec/bg/"
   font_dir: "demo/ocr_rec/font"
   corpus_file: "demo/ocr_rec/corpus.txt"
   img_save_folder: &img_save_folder output_img
