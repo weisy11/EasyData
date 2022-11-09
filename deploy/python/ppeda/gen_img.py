@@ -99,9 +99,6 @@ class GenAug(object):
         if not os.path.exists(config["img_save_folder"] + "/" + self.ops):
             os.makedirs(config["img_save_folder"] + "/" + self.ops)
 
-        out_label_dir = os.path.dirname(config["gen_label"])
-        if not os.path.exists(out_label_dir):
-            os.makedirs(out_label_dir)
         self.all_num = 0
         self.output_file = config["gen_label"]
         self.out_dir = config["img_save_folder"]
