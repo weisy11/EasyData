@@ -55,7 +55,7 @@ def rm_repeat(all_label, save_list, compare_file, out_file, thresh, delimiter):
 
 
 def check_dir(path):
-    if os.path.isfile(path):
+    if len(path.split('/')) < 2:
         return
     if not os.path.exists(os.path.dirname(path)):
         os.makedirs(os.path.dirname(path))
