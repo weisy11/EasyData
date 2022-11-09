@@ -28,7 +28,7 @@ MODEL:
             use_space_char: true
       Inputs:
         - image
-  
+
   - OCRRecOutput:
       name: vis
       last_ops:
@@ -39,4 +39,3 @@ MODEL:
         - image
         - rec_text
         - rec_score
-

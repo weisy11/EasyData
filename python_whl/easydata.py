@@ -14,6 +14,7 @@
 
 import os
 import sys
+import platform
 
 parent = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.abspath(os.path.join(parent, './deploy/')))
@@ -25,6 +26,7 @@ from utils.utils import load_yaml
 from python.ppeda import PPEasyDataAug
 from python.ppeda.utils import config
 from python.ppeda.gen_ocr_rec import GenOCR
+from python.ppeda.utils import logger
 
 __all__ = ['EasyData']
 
@@ -35,7 +37,7 @@ PPEDA_CONFIG = {
         'config': 'deploy/configs/ppeda_clas.yaml'
     },
     'text2img': {
-        'config': 'deploy/configs/ppeda_ocr_rec.yaml'
+        'config': 'deploy/configs/ppeda_ocr_text2img.yaml'
     }
 }
 
@@ -219,7 +221,7 @@ class PPEDA(PPEasyDataAug):
         self.save_list = []
         model_config = PPEDA_CONFIG[args.gen_mode]['config']
         if args.model_type == "ocr_rec":
-             args.delimiter = "\t"
+            args.delimiter = "\t"
         self.config = config.get_config(model_config, show=False)
         self.config = config.merge_gen_config(self.config, args.__dict__,
                                               "DataGen")
@@ -231,15 +233,17 @@ class PPEDA(PPEasyDataAug):
             self.corpus_file = args.corpus_file
             self.output_dir = args.out_dir
             self.bg_img_per_word_num = args.bg_num_per_word
-            self.threads = args.threads
+            if platform.system().lower() == 'windows':
+                self.threads = 1
+                logger.warning('Windows has not support threads > 1')
+            else:
+                self.threads = args.threads
         self.aug_type = args.ops
         self.gen_num = args.gen_num
         self.gen_ratio = args.gen_ratio
         self.gen_label = args.gen_label
         self.gen_mode = args.gen_mode
         self.compare_out = args.compare_out
-        self.check_dir(args.gen_label)
-        self.check_dir(args.compare_out)
         self.feature_thresh = args.repeat_ratio
 
         self.config["FeatureExtract"]["thresh"] = args.repeat_ratio

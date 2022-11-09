@@ -28,9 +28,9 @@ pip install -r requirements.txt
   提供原始图片，PP-EDA将自动完成基于图片的数据增广、筛选、清洗功能，输出扩充后的数据集。 原始数据组织形式：
 
   ```
-  ├── clas_data                                
-  │   ├── train    
-  │   ├── train_list.txt   
+  ├── clas_data
+  │   ├── train
+  │   ├── train_list.txt
   ```
   train_list.txt文件中默认请将图片路径和图片标签用 空格 分割，txt文件里的内容如下:
 
@@ -44,7 +44,7 @@ pip install -r requirements.txt
 
 
 ### 3.2 文本识别数据集：
-  
+
   文本识别数据扩充支持两种模式
 
   - img2img
@@ -54,9 +54,9 @@ pip install -r requirements.txt
   原始训练数据和标签文件`train_list.txt`组织形式 ：
 
   ```
-  ├── ocr_data                                
-  │   ├── images    
-  │   ├── train_list.txt   
+  ├── ocr_data
+  │   ├── images
+  │   ├── train_list.txt
   ```
   train_list.txt文件中 图片路径和图片标签默认使用 \t 分割，具体内容如下:
 
@@ -138,7 +138,7 @@ pip install -r requirements.txt
 在完成环境搭建和数据准备后，可以进行数据扩充，以图像分类为例，运行以下命令进行扩充数据：
 
 ```bash
-python tools/predict.py -c deploy/configs/ppeda_clas.yaml 
+python tools/predict.py -c deploy/configs/ppeda_clas.yaml
 ```
 
 `deploy/configs/ppeda_clas.yaml`配置文件解析:
@@ -146,7 +146,7 @@ python tools/predict.py -c deploy/configs/ppeda_clas.yaml
 
 ```
 # 数据生成参数
-DataGen: 
+DataGen:
   ops: # 数据增强类型
     - randaugment
     - random_erasing
@@ -208,8 +208,8 @@ BigModel:
 | 场景    | 配置文件 |
 | :--: | :--: |
 | 图像分类 |[ppeda_clas.yaml](../../../deploy/configs/ppeda_clas.yaml)|
-| 文本识别 img2img |[ppeda_ocr.yaml](../../../deploy/configs/ppeda_ocr.yaml)|
-| 文本识别 text2img |[ppeda_ocr_rec.yaml](../../../deploy/configs/ppeda_ocr_rec.yaml)|
+| 文本识别 img2img |[ppeda_ocr_img2img.yaml](../../../deploy/configs/ppeda_ocr_img2img.yaml)|
+| 文本识别 text2img |[ppeda_ocr_text2img.yaml](../../../deploy/configs/ppeda_ocr_text2img.yaml)|
 | 图像识别 |[ppeda_shitu.yaml](../../../deploy/configs/ppeda_shitu.yaml)|
 
 
@@ -238,7 +238,7 @@ BigModel:
 
 | 实验任务 | 模型 | 配置文件 | baseline精度 | 增广后精度 |
 | :--: | :--: | :--: |:--: |:------: |
-|  文本识别    | ch_PP-OCRv3_rec | [ch_PP-OCRv3_rec.yml](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/configs/rec/PP-OCRv3/ch_PP-OCRv3_rec.yml)  | 72.95%   |   74.15% (+1.20%)  | 
+|  文本识别    | ch_PP-OCRv3_rec | [ch_PP-OCRv3_rec.yml](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/configs/rec/PP-OCRv3/ch_PP-OCRv3_rec.yml)  | 72.95%   |   74.15% (+1.20%)  |
 |  图像分类    | PP-LCNet        | [PPLCNet_x1_0.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/ImageNet/PPLCNet/PPLCNet_x1_0.yaml) | 78.23%   |   80.03% (+1.80%)  |
 |  图像分类    | PP-HGNet        | [PPHGNet_small.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/ImageNet/PPHGNet/PPHGNet_small.yaml) |   90.80%   |   91.33% (+0.53%)  |
 |  识图任务    | PP-LCNetv2      | [GeneralRecognitionV2_PPLCNetV2_base.yaml](https://github.com/PaddlePaddle/PaddleClas/blob/release/2.5/ppcls/configs/GeneralRecognitionV2/GeneralRecognitionV2_PPLCNetV2_base.yaml) | 66.80%   |   67.70% (+0.90%)  |
