@@ -226,12 +226,12 @@ class PPEDA(PPEasyDataAug):
         self.config = config.merge_gen_config(self.config, args.__dict__,
                                               "DataGen")
         self.delimiter = self.config["DataGen"].get('delimiter', ' ')
+        self.output_dir = args.out_dir
         if args.gen_mode == "text2img":
             self.gen_ocr = GenOCR(self.config["DataGen"]["config"])
             self.bg_img_dir = args.bg_img_dir
             self.font_dir = args.font_dir
             self.corpus_file = args.corpus_file
-            self.output_dir = args.out_dir
             self.bg_img_per_word_num = args.bg_num_per_word
             if platform.system().lower() == 'windows':
                 self.threads = 1
