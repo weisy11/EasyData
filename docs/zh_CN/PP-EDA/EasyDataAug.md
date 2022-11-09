@@ -102,7 +102,7 @@ pip install -r requirements.txt
 完成环境和数据准备后，使用PP-EDA工具进行自动数据扩充。整个流程包含三个部分：离线增强数据、低质数据过滤、重复数据过滤，下面依次进行介绍。
 
 <div align="center">
-    <img src="../../images/aug/eda_pipeline.png" width=800 hight=400>
+    <img src="../../images/PP-EDA/eda_pipeline.png" width=800 hight=400>
 </div>
 
 
@@ -110,14 +110,14 @@ pip install -r requirements.txt
 数据增广普遍应用于训练阶段，且大都采用在线增广的形式来随机生成不同的增广图，但是在线增广图的质量却无法保证，对模型提升的精度有限。PP-EDA 工具主要参考真实场景的训练数据，离线合成一批丰富有效的增广数据。该工具融合了裁剪类、变换类和擦除类的代表算法，如 RandomCrop, RandAugment, RandomErasing, Gridmask, Tia等。具体地，可以通过指定增广方式和增广数量来离线生成增广数据，以 ImageNet 分类数据集为例，使用 PP-EDA 工具得到的离线增广效果图如下：
 
 <div align="center">
-    <img src="../../images/aug/aug.png" width=800 hight=400>
+    <img src="../../images/PP-EDA/aug.png" width=800 hight=400>
 </div>
 
 ### 4.2 重复数据过滤
 由于使用了多种增广方式，并且每种增广都具有一定的随机性，如增广的强度，增广的位置，因此大量生成离线增广数据可能会有重复数据，也即图像（特征）极其相似的增广图，不仅增广图和原始图片会产生重复数据，增广图之间也会产生重复，如下图所示：
 
 <div align="center">
-    <img src="../../images/aug/repeat.png" width=800 hight=400>
+    <img src="../../images/PP-EDA/repeat.png" width=800 hight=400>
 </div>
 
 
@@ -127,7 +127,7 @@ pip install -r requirements.txt
 由于数据增广具有一定的随机性，离线增广后的数据可能会存在一些低质量的数据，这些数据会影响模型的性能，因此针对低质数据进行过滤是一个很有必要的步骤。具体地，采取场景中对应的大模型对离线增广的所有数据进行前向预测，将得分低于某个阈值的增广图进行去除。以 ImageNet 分类数据集为例，使用大模型（PPLCNet）来对离线增广后数据进行前向推理，去除分类得分小于0.2的增广数据，低质数据示例如下：
 
 <div align="center">
-    <img src="../../images/aug/low_quality.png" width=800 hight=400>
+    <img src="../../images/PP-EDA/low_quality.png" width=800 hight=400>
 </div>
 
 可以看出，图一为采用 RandomErasing 的增广图，关键区域（目标区域）几乎全部被擦除，图二为采用 Gridmask 的增广图，关键区域也被掩盖，这些图像都大大增加了模型学习的难度，因此需要对这些低质数据进行过滤。
@@ -198,7 +198,7 @@ BigModel:
 
 增广后的数据示例如下：
 
-![eda_example](../../images/aug/eda_example.png)
+![eda_example](../../images/PP-EDA/eda_example.png)
 
 全部增广标签位于`DataGen.gen_label`字段下，也即`labels/test.txt`文件，有效标签位于`high_socre_label.txt`文件，可以看出有效标签数据量小于全部增广标签，数据量越大，过滤掉的无效数据也会更多。
 
@@ -232,7 +232,7 @@ BigModel:
 **整图方向分类**
 
 该任务是实用轻量图像分类解决方案（PULC, Practical Ultra Lightweight Classification）的一个应用场景，主要是对一张图像的方向进行分类，
-基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PULC整图方向分类模型](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/image_orientation/PPLCNet_x1_0.yaml)配置进行验证，数据集采用ImageNet1k数据和部分标注的文本数据，约136.5W。在使用PP-EDA进行扩充数据后，将增广数据与原始数据以1:1的比例混合，送入模型迭代训练。具体训练步骤参考[整图方向分类训练]()@崔程。
+基于[PaddleClas](https://github.com/PaddlePaddle/PaddleClas/tree/release/2.5)中的[PULC整图方向分类模型](https://github.com/PaddlePaddle/PaddleClas/blob/develop/ppcls/configs/PULC/image_orientation/PPLCNet_x1_0.yaml)配置进行验证，数据集采用ImageNet1k数据和部分标注的文本数据，约136.5W。在使用PP-EDA进行扩充数据后，将增广数据与原始数据以1:1的比例混合，送入模型迭代训练。具体训练步骤参考[整图方向分类训练](https://github.com/PaddlePaddle/PaddleClas/blob/develop/docs/zh_CN/models/PULC/PULC_image_orientation.md)。
 
 **广告码图像过滤**
 
