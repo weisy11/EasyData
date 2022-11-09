@@ -192,6 +192,8 @@ class GenOCR(object):
             for lines in f.readlines():
                 word_list.append(str(lines).replace("\n", ""))
 
+        assert len(word_list) > 0, "Can not find any words in {}".format(
+            corpus_file)
         assert len(os.listdir(
             font_dir)) > 0, "Can not find any font in {}".format(font_dir)
         assert len(os.listdir(
