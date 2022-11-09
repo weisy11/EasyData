@@ -86,7 +86,7 @@ class RandAugment(object):
             lambda img, magnitude: ImageEnhance.Color(img).enhance(
                 1 + magnitude * rnd_ch_op([-1, 1])),
             "posterize":
-            lambda img, magnitude: ImageOps.posterize(img, magnitude),
+            lambda img, magnitude: ImageOps.posterize(img, int(magnitude)),
             "solarize":
             lambda img, magnitude: ImageOps.solarize(img, magnitude),
             "contrast":
