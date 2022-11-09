@@ -34,7 +34,7 @@ pip install easydata
 本地构建并安装
 
 ```bash
-git clone https://github.com/PaddlePaddle/EasyData.git
+git clone https://github.com/PaddlePaddle/FastData.git
 python3 setup.py bdist_wheel
 pip3 install dist/easydata-x.x.x-py3-none-any.whl # x.x.x是easydata的版本号
 ```
