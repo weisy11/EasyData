@@ -34,7 +34,7 @@ IndexProcess:
   score_thres: 0.5
 
 BigModel:
-  model_type: cls  # support(cls / ocr)
+  model_type: cls  # support(cls / ocr_rec)
   config: "deploy/configs/ppcv/big_model_classification.yaml"
   batch_size: 8
   thresh: 0.1
