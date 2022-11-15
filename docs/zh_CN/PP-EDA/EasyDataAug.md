@@ -23,7 +23,7 @@
 推荐使用源码进行准备环境，首先参考[文档](./quick_start.md)安装PaddlePaddle，如已安装，进行下一步
 
 ```bash
-git clone https://github.com/PaddlePaddle/FastData.git
+git clone https://github.com/PaddlePaddle/EasyData.git
 pip install -r requirements.txt
 ```
 我们也提供了相应的whl包快速使用教程，参考[快速开始](./quick_start.md)
