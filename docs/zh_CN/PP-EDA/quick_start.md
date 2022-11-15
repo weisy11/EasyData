@@ -2,7 +2,7 @@
 
 - [1. 安装](#1)
   - [1.1 安装PaddlePaddle](#11)
-  - [1.2 安装FastData whl包](#12)
+  - [1.2 安装EasyData whl包](#12)
 - [2. 快速使用](#2)
   - [2.1 命令行使用](#21)
       - [2.1.1 图像分类](#211)
@@ -13,7 +13,7 @@
 - [4. 小节](#4)
 
 
-本文主要介绍FastData whl包对[PP-EDA](./EasyDataAug.md)工具的快速使用，如需使用数据质量提升相关功能，请参考教程[PP-LDI](../LDI/quick_start.md)
+本文主要介绍EasyData whl包对[PP-EDA](./EasyDataAug.md)工具的快速使用，如需使用数据质量提升相关功能，请参考教程[PP-LDI](../LDI/quick_start.md)
 
 
 <a name="1"></a>
@@ -37,7 +37,7 @@
 更多的版本需求，请参照[飞桨官网安装文档](https://www.paddlepaddle.org.cn/install/quick)中的说明进行操作。
 
 <a name="12"></a>
-### 1.2 安装FastData whl包
+### 1.2 安装EasyData whl包
 
 pip安装
 
@@ -118,7 +118,7 @@ demo/ocr_rec/
 
 
 
-`FastData/demo` 路径下提供了样例图，可参考样例组织自己的数据格式。
+`EasyData/demo` 路径下提供了样例图，可参考样例组织自己的数据格式。
 
 
 如需使用自定义数据，注意将下方 `--ori_data_dir` 和 `--label_file` 参数替换为相应的测试图片路径和标签路径。
@@ -246,4 +246,4 @@ ppeda.predict()
 
 ## 4. 小结
 
-通过本节内容，相信您已经掌握了FastData whl包的使用方法并获得了初步效果。
+通过本节内容，相信您已经掌握了EasyData whl包的使用方法并获得了初步效果。
