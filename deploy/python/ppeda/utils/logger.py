@@ -93,18 +93,18 @@ def advertise():
     Show the advertising message like the following:
 
     ===========================================================
-    ==        FastData is powered by PaddlePaddle !        ==
+    ==        EasyData is powered by PaddlePaddle !        ==
     ===========================================================
     ==                                                       ==
     ==   For more info please go to the following website.   ==
     ==                                                       ==
-    ==       https://github.com/PaddlePaddle/FastData        ==
+    ==       https://github.com/PaddlePaddle/EasyData        ==
     ===========================================================
 
     """
-    copyright = "FastData is powered by PaddlePaddle !"
+    copyright = "EasyData is powered by PaddlePaddle !"
     ad = "For more info please go to the following website."
-    website = "https://github.com/PaddlePaddle/FastData"
+    website = "https://github.com/PaddlePaddle/EasyData"
     AD_LEN = 6 + len(max([copyright, ad, website], key=len))
 
     info(
