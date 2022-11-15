@@ -61,7 +61,7 @@ EasyData 旨在打造一套通用、领先且实用的数据自动扩充与数�
 
 ## 📣 近期更新
 
-- **💥 直播预告**:11.23-11.24日每晚8点半，EasyData研发团队详解数据质量提升策略和数据合成工具。微信扫描下方二维码，关注公众号并填写问卷后进入官方交流群，获取获取直播链接与20G重磅EasyData学习大礼包(自研半自动标注应用程序，数据处理相关CVPR、AAAI、ACL、IJCAI顶级会议paper list，手把手教学视频以及学习资料)，获取发布最新资讯。
+- **💥 直播预告**:11.23-11.24日每晚8点半，EasyData研发团队详解数据清洗策略和数据合成工具。微信扫描下方二维码，关注公众号并填写问卷后进入官方交流群，获取获取直播链接与20G重磅EasyData学习大礼包(自研半自动标注应用程序，数据处理相关CVPR、AAAI、ACL、IJCAI顶级会议paper list，手把手教学视频以及学习资料)，获取发布最新资讯。
 
  <div align="center">
 <img src="https://user-images.githubusercontent.com/59186797/200607111-ae440419-d302-4bdc-9970-5d9dba08ea0f.jpg"  width = "150" height = "150" />
@@ -69,14 +69,14 @@ EasyData 旨在打造一套通用、领先且实用的数据自动扩充与数�
 
 - **🔥2022.11 发布 EasyData beta/0.5**
   - 发布数据清洗工具，包括图像方向矫正、低质图像过滤能力，使用该工具可以在多个视觉任务中提升效果。
-  - 发布数据合成工具，支持增广数据生成、重复和低质数据过滤，使用该工具可以在整图识别场景中提升效果。
+  - 发布数据扩充工具，支持增广数据生成、重复和低质数据过滤，使用该工具可以在整图识别场景中提升效果。
   - 新增CV、NLP、Speech方向的50+[数据集](docs/zh_CN/datasets/dataset.md)，6+[自研半自动标注工具](docs/zh_CN/datasets/dataset.md)
 
 
 
 ## ⚡ 快速开始
 
-- [数据质量提升快速体验](docs/zh_CN/PP-DataClean/quick_start.md)
+- [数据清洗快速体验](docs/zh_CN/PP-DataClean/quick_start.md)
 - [数据合成工具快速体验](docs/zh_CN/PP-EDA/quick_start.md)
 - [开源数据集和标注工具大全](docs/zh_CN/datasets/dataset.md)
 
@@ -104,7 +104,7 @@ EasyData 旨在打造一套通用、领先且实用的数据自动扩充与数�
 - 运行环境准备 @晓婷
 - 数据清洗
   - [快速体验](docs/zh_CN/PP-DataClean/quick_start.md)
-  - [数据质量提升工具集](docs/zh_CN/PP-DataClean/PP-DataClean.md)
+  - [数据清洗工具集](docs/zh_CN/PP-DataClean/PP-DataClean.md)
     - [图像方向校正工具](docs/zh_CN/PP-DataClean/image_orientation_correction.md)
     - [模糊图像过滤工具](docs/zh_CN/PP-DataClean/blured_image_filtering.md)
     - [二维码图像过滤工具](docs/zh_CN/PP-DataClean/code_image_filtering.md)

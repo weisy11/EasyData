@@ -7,10 +7,10 @@ EasyData 是基于飞桨开发的数据处理工具，旨在帮助视觉开发�
 作为可插拔的模块，PP-DataClean 可以嵌到任何视觉任务中，其功能可视化如下：
 
 <div align="center">
-<img src="https://user-images.githubusercontent.com/45199522/201908167-7e989e4a-42ac-497f-8c5f-ff3fdaca519a.png">
+<img src="https://user-images.githubusercontent.com/45199522/201908925-bde8e9ac-1216-41c9-b39f-5ab77506a396.png">
 </div>
 
-目前，数据清洗模块包含图像方向矫正、模糊图像过滤、广告码图像过滤，相关的模型介绍及模型下载链接如下：
+目前，数据清洗模块包含图像方向矫正、模糊图像过滤、二维码图像过滤，相关的模型介绍及模型下载链接如下：
 
 | 类别 | 亮点 | 文档说明 | 模型下载 |
 | :--: | :--: | :------: | :------: |
