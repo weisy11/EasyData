@@ -12,33 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from python.ppeda.data.preprocess.ops.autoaugment import ImageNetPolicy as RawImageNetPolicy
-from python.ppeda.data.preprocess.ops.randaugment import RandAugment as RawRandAugment
-from python.ppeda.data.preprocess.ops.timm_autoaugment import RawTimmAutoAugment
-from python.ppeda.data.preprocess.ops.cutout import Cutout
+from python.ppdataaug.data.preprocess.ops.autoaugment import ImageNetPolicy as RawImageNetPolicy
+from python.ppdataaug.data.preprocess.ops.randaugment import RandAugment as RawRandAugment
+from python.ppdataaug.data.preprocess.ops.timm_autoaugment import RawTimmAutoAugment
+from python.ppdataaug.data.preprocess.ops.cutout import Cutout
 
-from python.ppeda.data.preprocess.ops.hide_and_seek import HideAndSeek
-from python.ppeda.data.preprocess.ops.random_erasing import RandomErasing
-from python.ppeda.data.preprocess.ops.grid import GridMask
+from python.ppdataaug.data.preprocess.ops.hide_and_seek import HideAndSeek
+from python.ppdataaug.data.preprocess.ops.random_erasing import RandomErasing
+from python.ppdataaug.data.preprocess.ops.grid import GridMask
 
-from python.ppeda.data.preprocess.ops.operators import DecodeImage
-from python.ppeda.data.preprocess.ops.operators import ResizeImage
-from python.ppeda.data.preprocess.ops.operators import CropImage
-from python.ppeda.data.preprocess.ops.operators import RandCropImage
-from python.ppeda.data.preprocess.ops.operators import RandCropImageV2
-from python.ppeda.data.preprocess.ops.operators import RandFlipImage
-from python.ppeda.data.preprocess.ops.operators import NormalizeImage
-from python.ppeda.data.preprocess.ops.operators import ToCHWImage
-from python.ppeda.data.preprocess.ops.operators import AugMix
-from python.ppeda.data.preprocess.ops.operators import Pad
-from python.ppeda.data.preprocess.ops.operators import ToTensor
-from python.ppeda.data.preprocess.ops.operators import Normalize
-from python.ppeda.data.preprocess.ops.operators import RandomHorizontalFlip
-from python.ppeda.data.preprocess.ops.operators import CropWithPadding
-from python.ppeda.data.preprocess.ops.operators import RandomInterpolationAugment
-from python.ppeda.data.preprocess.ops.operators import ColorJitter
-from python.ppeda.data.preprocess.ops.operators import RandomCropImage
-from python.ppeda.data.preprocess.ops.operators import Padv2
+from python.ppdataaug.data.preprocess.ops.operators import DecodeImage
+from python.ppdataaug.data.preprocess.ops.operators import ResizeImage
+from python.ppdataaug.data.preprocess.ops.operators import CropImage
+from python.ppdataaug.data.preprocess.ops.operators import RandCropImage
+from python.ppdataaug.data.preprocess.ops.operators import RandCropImageV2
+from python.ppdataaug.data.preprocess.ops.operators import RandFlipImage
+from python.ppdataaug.data.preprocess.ops.operators import NormalizeImage
+from python.ppdataaug.data.preprocess.ops.operators import ToCHWImage
+from python.ppdataaug.data.preprocess.ops.operators import AugMix
+from python.ppdataaug.data.preprocess.ops.operators import Pad
+from python.ppdataaug.data.preprocess.ops.operators import ToTensor
+from python.ppdataaug.data.preprocess.ops.operators import Normalize
+from python.ppdataaug.data.preprocess.ops.operators import RandomHorizontalFlip
+from python.ppdataaug.data.preprocess.ops.operators import CropWithPadding
+from python.ppdataaug.data.preprocess.ops.operators import RandomInterpolationAugment
+from python.ppdataaug.data.preprocess.ops.operators import ColorJitter
+from python.ppdataaug.data.preprocess.ops.operators import RandomCropImage
+from python.ppdataaug.data.preprocess.ops.operators import Padv2
 
 import numpy as np
 from PIL import Image

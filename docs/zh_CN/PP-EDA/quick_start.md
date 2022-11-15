@@ -127,7 +127,7 @@ demo/ocr_rec/
 #### 2.1.1 图像分类
 
 ```bash
-easydata --model ppeda --ori_data_dir demo/clas_data/ --label_file demo/clas_data/train_list.txt --gen_mode img2img
+easydata --model ppdataaug --ori_data_dir demo/clas_data/ --label_file demo/clas_data/train_list.txt --gen_mode img2img
 ```
 
 运行该命令后，会输出增广后的图像和标签文件，增广图像路径默认在test目录下，该目录下有对应的增广子文件夹，如下所示：
@@ -162,7 +162,7 @@ easydata --model ppeda --ori_data_dir demo/clas_data/ --label_file demo/clas_dat
 输入原始图像，其中过滤模型使用ocr_rec
 
 ```bash
-easydata --model ppeda --ori_data_dir demo/ocr_data/ --label_file demo/ocr_data/train_list.txt --gen_mode img2img --model_type ocr_rec
+easydata --model ppdataaug --ori_data_dir demo/ocr_data/ --label_file demo/ocr_data/train_list.txt --gen_mode img2img --model_type ocr_rec
 ```
 
 - text2img
@@ -170,7 +170,7 @@ easydata --model ppeda --ori_data_dir demo/ocr_data/ --label_file demo/ocr_data/
 输入文本数据，生成图像数据，需提供语料路径、字体路径、背景图路径:
 
 ```bash
-easydata --model ppeda --bg_img_dir demo/ocr_rec/bg --font_dir demo/ocr_rec/font --corpus_file demo/ocr_rec/corpus.txt --gen_mode text2img --model_type ocr_rec
+easydata --model ppdataaug --bg_img_dir demo/ocr_rec/bg --font_dir demo/ocr_rec/font --corpus_file demo/ocr_rec/corpus.txt --gen_mode text2img --model_type ocr_rec
 ```
 
 运行该命令后，会输出生成的图像和标签文件，输出图像默认在test目录下，如下所示：
@@ -200,7 +200,7 @@ test/0/9_n01682714_8438.JPEG	停车场
 由于图像识别任务的暂时无法返回预测score，因此不使用大模型过滤，设置 `--use_big_model False`
 
 ```bash
-easydata --model ppeda --ori_data_dir demo/shitu_data --label_file demo/shitu_data/train_list.txt --gen_mode img2img --use_big_model False
+easydata --model ppdataaug --ori_data_dir demo/shitu_data --label_file demo/shitu_data/train_list.txt --gen_mode img2img --use_big_model False
 ```
 
 <a name="22"></a>
@@ -210,8 +210,8 @@ easydata不仅支持命令行使用，还支持Python脚本进行调用使用，
 ```python
 from easydata import EasyData
 
-ppeda = EasyData(model='ppeda', ori_data_dir='demo/clas_data', label_file='demo/clas_data/train_list.txt', gen_mode='img2img',model_type='cls')
-ppeda.predict()
+ppdataaug = EasyData(model='ppdataaug', ori_data_dir='demo/clas_data', label_file='demo/clas_data/train_list.txt', gen_mode='img2img',model_type='cls')
+ppdataaug.predict()
 ```
 如需更换其他场景，可以修改 `gen_mode` 和 `model_type` 字段，具体参数说明可以参考第三节
 
@@ -220,7 +220,7 @@ ppeda.predict()
 ## 3. 参数说明
 | 字段 | 任务类型 |说明 | 默认值 |
 |---|---|---|---|
-| model | 通用 |使用的模型工具，可选ppeda,ppldi | ppeda |
+| model | 通用 |使用的模型工具，可选ppdataaug,ppldi | ppdataaug |
 | gen_mode | 数据生成 | 数据生成类型，可选 img2img, text2img | img2img |
 | model_type | 数据生成 | 场景模型类型，可选 cls, ocr_rec | cls |
 | ori_data_dir | 数据生成 | 原始数据目录 | None |

@@ -23,21 +23,21 @@ import argparse
 
 from ppcv.engine.pipeline import Pipeline
 from utils.utils import load_yaml
-from python.ppeda import PPEasyDataAug
-from python.ppeda.utils import config
-from python.ppeda.gen_ocr_rec import GenOCR
-from python.ppeda.utils import logger
+from python.ppdataaug import PPDataAug
+from python.ppdataaug.utils import config
+from python.ppdataaug.gen_ocr_rec import GenOCR
+from python.ppdataaug.utils import logger
 
 __all__ = ['EasyData']
 
 VERSION = '0.5.0.1'
 
-PPEDA_CONFIG = {
+PPDA_CONFIG = {
     'img2img': {
-        'config': 'deploy/configs/ppeda_clas.yaml'
+        'config': 'deploy/configs/ppdataaug_clas.yaml'
     },
     'text2img': {
-        'config': 'deploy/configs/ppeda_ocr_text2img.yaml'
+        'config': 'deploy/configs/ppdataaug_ocr_text2img.yaml'
     }
 }
 
@@ -138,7 +138,7 @@ def parse_args():
     parser.add_argument(
         "--model",
         type=str,
-        default="ppeda",
+        default="ppdataaug",
     )
     parser.add_argument(
         "--run_mode",
@@ -164,7 +164,7 @@ def parse_args():
         required=False)
     parser.add_argument("--threshold", type=float, default=0, required=False)
 
-    # PPEDA args
+    # PPDA args
     parser.add_argument("--gen_mode", type=str, default="img2img")
     parser.add_argument("--gen_num", type=int, default=10)
     parser.add_argument("--gen_ratio", type=float, default=0)
@@ -213,13 +213,13 @@ def parse_args():
     return parser.parse_args()
 
 
-class PPEDA(PPEasyDataAug):
+class PPDA(PPDataAug):
 
     def __init__(self, **kwargs):
         args = parse_args()
         args.__dict__.update(**kwargs)
         self.save_list = []
-        model_config = PPEDA_CONFIG[args.gen_mode]['config']
+        model_config = PPDA_CONFIG[args.gen_mode]['config']
         if args.model_type == "ocr_rec":
             args.delimiter = "\t"
         self.config = config.get_config(model_config, show=False)
@@ -271,14 +271,14 @@ class EasyData(object):
 
     def __init__(self, **cfg):
         self.model = cfg['model']
-        if self.model == "ppeda":
-            self.pipeline = PPEDA(**cfg)
+        if self.model == "ppdataaug":
+            self.pipeline = PPDA(**cfg)
         else:
             FLAGS = init_pipeline_config(**cfg)
             self.pipeline = Pipeline(FLAGS)
 
     def predict(self, input=None):
-        if self.model == "ppeda":
+        if self.model == "ppdataaug":
             return self.pipeline.predict()
         else:
             return self.pipeline.run(input)

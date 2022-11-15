@@ -148,10 +148,10 @@ pip install -r requirements.txt
 在完成环境搭建和数据准备后，可以进行数据扩充，以图像分类为例，运行以下命令进行扩充数据：
 
 ```bash
-python tools/predict.py -c deploy/configs/ppeda_clas.yaml
+python tools/predict.py -c deploy/configs/ppdataaug_clas.yaml
 ```
 
-`deploy/configs/ppeda_clas.yaml`配置文件解析:
+`deploy/configs/ppdataaug_clas.yaml`配置文件解析:
 首先是`DataGen`字段，该字段主要包含数据生成对应的参数
 
 ```
@@ -219,10 +219,10 @@ BigModel:
 
 | 场景    | 配置文件 |
 | :--: | :--: |
-| 图像分类 |[ppeda_clas.yaml](../../../deploy/configs/ppeda_clas.yaml)|
-| 文本识别 img2img |[ppeda_ocr_img2img.yaml](../../../deploy/configs/ppeda_ocr_img2img.yaml)|
-| 文本识别 text2img |[ppeda_ocr_text2img.yaml](../../../deploy/configs/ppeda_ocr_text2img.yaml)|
-| 图像识别 |[ppeda_shitu.yaml](../../../deploy/configs/ppeda_shitu.yaml)|
+| 图像分类 |[ppdataaug_clas.yaml](../../../deploy/configs/ppdataaug_clas.yaml)|
+| 文本识别 img2img |[ppdataaug_ocr_img2img.yaml](../../../deploy/configs/ppdataaug_ocr_img2img.yaml)|
+| 文本识别 text2img |[ppdataaug_ocr_text2img.yaml](../../../deploy/configs/ppdataaug_ocr_text2img.yaml)|
+| 图像识别 |[ppdataaug_shitu.yaml](../../../deploy/configs/ppdataaug_shitu.yaml)|
 
 <a name="5"></a>
 
